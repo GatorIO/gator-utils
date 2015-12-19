@@ -1,0 +1,26 @@
+{
+    "name": "gator-utils",
+    "description": "Utility functions",
+    "version": "1.0.4",
+    "author": {
+        "name": "GatorIO"
+    },
+    "main": "lib/index.js",
+    "contributors": [
+        {
+            "name": "Phil Vizzaccaro",
+            "email": "phil@gator.io"
+        }
+    ],
+    "typescript": {
+        "definition": "gator-utils.d.ts"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/GatorIO/gator-utils.git"
+    },
+    "dependencies": {
+        "iconv-lite": "^0.4.13"
+    },
+    "license" : "MIT"
+}
