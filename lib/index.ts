@@ -385,3 +385,9 @@ export function hash(input: string): number {
     }
     return hash;
 }
+
+export function noCache(res: any) {
+    res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+    res.header('Expires', '-1');
+    res.header('Pragma', 'no-cache');
+}
