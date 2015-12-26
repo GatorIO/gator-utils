@@ -1,10 +1,12 @@
 /// <reference path="epoch.ts" />
 /// <reference path="ip.ts" />
 /// <reference path="../typings/node/node.d.ts" />
+/// <reference path="../typings/clone/clone.d.ts" />
 export var ip = require('./ip');
 export var epoch = require('./epoch');
 export var config = require('./config');
 import crypto = require('crypto');
+import clone = require('clone');
 
 /*
  Common utility functions
@@ -179,7 +181,7 @@ export function clone(o: Object): Object {
     if (!o || typeof (o) != 'object')
         return o;
 
-    return Object['assign']({}, o);
+    return clone(o);
 }
 
 //  Concatenate two objects into the first object

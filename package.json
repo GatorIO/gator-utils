@@ -1,7 +1,7 @@
 {
     "name": "gator-utils",
     "description": "Utility functions",
-    "version": "1.0.8",
+    "version": "1.0.9",
     "author": {
         "name": "GatorIO"
     },
@@ -23,6 +23,7 @@
         "url": "https://github.com/GatorIO/gator-utils.git"
     },
     "dependencies": {
+        "clone": "^1.0.2",
         "iconv-lite": "^0.4.13"
     },
     "license" : "MIT"
