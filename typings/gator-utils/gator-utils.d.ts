@@ -44,6 +44,7 @@ declare module 'gator-utils' {
         export function hash(address:string):number;
         export function toNumber(address:string, reverse?:boolean):number;
         export function compress(address:string):any;
+        export function decompress(address:string):any;
         export function toNumber32(address:string):number;
         export function fromNumber(ipNumber:number):string;
         export function toNumberIPV6(address:string):number;

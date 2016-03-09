@@ -56,7 +56,7 @@ export function remoteAddress(req): string {
 
         //  a tiny % of hits have an unknown ip address
         if (xf.substring(0, 7) == "unknown") {
-            return "1.2.3.4";
+            return "127.0.0.1";
         }
 
         return xf;
@@ -66,7 +66,7 @@ export function remoteAddress(req): string {
 
         //  a tiny % of hits have an unknown ip address, so return a default address
         if (xf.substring(0, 7) == "unknown") {
-            return "1.2.3.4";
+            return "127.0.0.1";
         }
 
         return xf;
@@ -79,7 +79,7 @@ export function isLoopback(addr) {
         || /^::1/.test(addr);
 }
 
-//  Return a 52-bit integer hash from an IPv6 address.  This uses a variation of the murmur3 hash algorithm.  The collision
+//  Return a 32-bit integer hash from an IPv6 address.  This uses a variation of the murmur3 hash algorithm.  The collision
 //  rate is small, roughly one in 100,000,000.
 export function hashIPV6(ip: string): number {
     var hash = 0, len: number;
@@ -177,6 +177,37 @@ export function compress(address: string): any {
     }
 }
 
+//  Format an IP address to a storable format.
+
+//  If IPv4: the ip address converted to a 32-bit integer
+//  If IPv6: the ip address converted to a 16 byte binary
+export function decompress(address: any): any {
+
+    if (!isIPV6(address)) {
+        var addr = utils.toBytes(address);
+
+        return addr[3] + '.' +
+            addr[2] + '.' +
+            addr[1] + '.' +
+            addr[0];
+    } else {
+
+        var ret: string = '';
+
+        for (var i = 0; i < address.length; i += 2) {
+            var byte = '0' + address[i].toString(16);
+            ret += byte.length == 2 ? byte : byte.substr(1, 2);
+
+            byte = '0' + address[i + 1].toString(16);
+            ret += byte.length == 2 ? byte : byte.substr(1, 2);
+
+            if (i != address.length - 2)
+                ret += ':';
+        }
+
+        return ret;
+    }
+}
 
 //  Convert an IP address to a 32-bit number.
 export function toNumber32(address: string): number {
@@ -217,7 +248,5 @@ export function fromNumber(ipNumber: number): string {
 
 //  Convert an IP address to a number.
 export function toNumberIPV6(address: string): number {
-
-    //  need to come up with an algorithm to convert ipv6 address to rangable numbers
-    return 100;
+    return hashIPV6(address);
 }
