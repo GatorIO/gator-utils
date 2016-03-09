@@ -16,7 +16,7 @@ export function isIPV6(address: string): boolean {
 
     if (!address) { return false; }
 
-    return address.indexOf(':') > -1;
+    return typeof address == 'object' || address.indexOf(':') > -1;
 }
 
 //  Return the I.P. address of the request (checking for proxy server forwarding).
@@ -183,7 +183,7 @@ export function compress(address: string): any {
 //  If IPv6: the ip address converted to a 16 byte binary
 export function decompress(address: any): any {
 
-    if (!isIPV6(address)) {
+    if (typeof address == 'number') {
         var addr = utils.toBytes(address);
 
         return addr[3] + '.' +
