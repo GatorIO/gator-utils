@@ -358,7 +358,7 @@ export function formatTimezone(param: string) {
     var timezoneId: string = 'PST';
 
     //  get timezone
-    if (param) {
+    if (param && typeof param == 'string') {
 
         //  pull timezone id out of timezone description
         if (param.indexOf('(') > -1) {
