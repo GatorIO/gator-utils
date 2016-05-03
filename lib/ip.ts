@@ -46,8 +46,12 @@ export function remoteAddress(req): string {
 
                 var ipTrim: string = xfs[i].trim();
 
-                if (ipTrim != "" && ipTrim.substring(0, 3) != "10." && ipTrim.substring(0, 8) != "127.0.0." && ipTrim.substring(0, 8) != "192.168." && ipTrim != "unknown" && ipTrim != "::1") {
-                    return ipTrim;
+                //  strange values are sometimes placed in the ip list, like hatbld.det.  Filter these out.
+                if (ipTrim.split('.').length != 2) {     //  they always have a single . - ignore ips with a single period
+
+                    if (ipTrim != "" && ipTrim.substring(0, 3) != "10." && ipTrim.substring(0, 8) != "127.0.0." && ipTrim.substring(0, 8) != "192.168." && ipTrim != "unknown" && ipTrim != "::1") {
+                        return ipTrim;
+                    }
                 }
             }
 
