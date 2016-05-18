@@ -48,12 +48,12 @@ export function remoteAddress(req): string {
 
                 //  ipv4 addresses sometimes are in ipv6 format:  ::ffff:1.2.3.4 - strip off the ipv6 part
                 if (ipTrim.substr(0, 7) == '::ffff:' && ipTrim.split('.').length == 4)
-                    ipTrim = ipTrim.substr(8);
+                    ipTrim = ipTrim.substr(7);
 
                 //  strange values are sometimes placed in the ip list, like hatbld.det.  Filter these out.
                 if (ipTrim.split('.').length != 2) {     //  they always have a single . - ignore ips with a single period
 
-                    if (ipTrim != "" && ipTrim.substring(0, 3) != "10." && ipTrim.substring(0, 8) != "127.0.0." && ipTrim.substring(0, 8) != "192.168." && ipTrim != "unknown" && ipTrim != "::1") {
+                    if (ipTrim != "" && ipTrim.substring(0, 3) != "10." && ipTrim.substring(0, 7) != "172.16."&& ipTrim.substring(0, 7) != "172.31."&& ipTrim.substring(0, 8) != "127.0.0." && ipTrim.substring(0, 8) != "192.168." && ipTrim != "unknown" && ipTrim != "::1") {
                         return ipTrim;
                     }
                 }
@@ -61,6 +61,10 @@ export function remoteAddress(req): string {
 
             xf = xfs[0].trim();
         }
+
+        //  ipv4 addresses sometimes are in ipv6 format:  ::ffff:1.2.3.4 - strip off the ipv6 part
+        if (xf.substr(0, 7) == '::ffff:' && xf.split('.').length == 4)
+            xf = xf.substr(7);
 
         //  a tiny % of hits have an unknown ip address
         if (xf.substring(0, 7) == "unknown") {
