@@ -46,6 +46,10 @@ export function remoteAddress(req): string {
 
                 var ipTrim: string = xfs[i].trim();
 
+                //  ipv4 addresses sometimes are in ipv6 format:  ::ffff:1.2.3.4 - strip off the ipv6 part
+                if (ipTrim.substr(0, 7) == '::ffff:' && ipTrim.split('.').length == 4)
+                    ipTrim = ipTrim.substr(8);
+
                 //  strange values are sometimes placed in the ip list, like hatbld.det.  Filter these out.
                 if (ipTrim.split('.').length != 2) {     //  they always have a single . - ignore ips with a single period
 
