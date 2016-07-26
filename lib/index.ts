@@ -393,3 +393,13 @@ export function noCache(res: any) {
     res.header('Expires', '-1');
     res.header('Pragma', 'no-cache');
 }
+
+//  strip the protocol off a URL (https://, ftp://, etc.)
+export function stripProtocol(url: string): string {
+    var ret = url;
+
+    if (url.indexOf('://') > -1)
+        ret = ret.substr(url.indexOf('://') + 3);
+
+    return ret;
+}

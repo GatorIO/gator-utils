@@ -28,6 +28,7 @@ declare module 'gator-utils' {
     export function guid():string;
     export function hash(input:string):number;
     export function noCache(res:any):void;
+    export function stripProtocol(url:string):string;
 
     export module config {
         export function env(): string;
