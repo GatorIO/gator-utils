@@ -1,4 +1,5 @@
-/// <reference path="../typings/node/node.d.ts" />
+/// <reference path="../typings/moment-timezone/moment-timezone.d.ts" />
+var moment = require("moment-timezone");
 
 /**
  * Date and epoch functions
@@ -8,13 +9,13 @@
  *
  */
 
-export var timezones: Array<{ code: string; name: string; utcOffset?: number; dstStart?: Date; dstEnd?: Date; }> = [];
+export var timezones: Array<{ code: string; name: string; momentName?: string, utcOffset?: number; dstStart?: Date; dstEnd?: Date; }> = [];
 
 timezones[0] = { code: 'UTC', name: 'UTC 0:00 - Coordinated Universal Time (UTC)', utcOffset: 0 };
 timezones[1] = { code: 'MIT', name: 'UTC -11:00 - Midway Islands Time (MIT)', utcOffset: -11 };
 timezones[2] = { code: 'HST', name: 'UTC -10:00 - Hawaii Standard Time (HST)', utcOffset: -10 };
-timezones[3] = { code: 'AST', name: 'UTC -9:00 - Alaska Standard Time (AST)', utcOffset: -9, dstStart: new Date(Date.UTC(2016, 2, 13, 2)), dstEnd: new Date(Date.UTC(2016, 10, 6, 2)) };
-timezones[4] = { code: 'PST', name: 'UTC -8:00 - Pacific Standard Time (PST)', utcOffset: -8, dstStart: new Date(Date.UTC(2016, 2, 13, 2)), dstEnd: new Date(Date.UTC(2016, 10, 6, 2)) };
+timezones[3] = { code: 'AST', momentName: 'US/Alaska', name: 'UTC -9:00 - Alaska Standard Time (AST)', utcOffset: -9, dstStart: new Date(Date.UTC(2016, 2, 13, 2)), dstEnd: new Date(Date.UTC(2016, 10, 6, 2)) };
+timezones[4] = { code: 'PST', momentName: 'US/Pacific', name: 'UTC -8:00 - Pacific Standard Time (PST)', utcOffset: -8, dstStart: new Date(Date.UTC(2016, 2, 13, 2)), dstEnd: new Date(Date.UTC(2016, 10, 6, 2)) };
 timezones[5] = { code: 'PNT', name: 'UTC -7:00 - Phoenix Standard Time (PNT)', utcOffset: -7 };
 timezones[6] = { code: 'MST', name: 'UTC -7:00 - Mountain Standard Time (MST)', utcOffset: -7, dstStart: new Date(Date.UTC(2016, 2, 13, 2)), dstEnd: new Date(Date.UTC(2016, 10, 6, 2)) };
 timezones[7] = { code: 'CST', name: 'UTC -6:00 - Central Standard Time (CST)', utcOffset: -6, dstStart: new Date(Date.UTC(2016, 2, 13, 2)), dstEnd: new Date(Date.UTC(2016, 10, 6, 2)) };
@@ -57,17 +58,24 @@ export enum DateIntervals {
     year
 }
 
-//  Return an id from a timezone code or id.  Return -1 if not found.
+//  Return an id from a timezone code, moment timezone name or id.  Return -1 if not found.
 export function getTimezoneId(timezone: any): number {
 
     if (typeof timezone == 'string') {     // like PST or GMT
 
         timezone = timezone.toUpperCase();
 
-        for (var i = 1; i < 35; i++) {
+        for (var key in timezones) {
 
-            if (timezones[i].code == timezone)
-                return i;
+            if (timezones.hasOwnProperty(key)) {
+                timezone = timezones[key];
+
+                if (timezone.code.toUpperCase() == timezone.toUpperCase())
+                    return +key;
+
+                if (timezone.momentName && timezone.momentName.toUpperCase() == timezone.toUpperCase())
+                    return +key;
+            }
         }
 
         return -1;      // not found
@@ -82,18 +90,27 @@ export function utcOffset(timezoneId: number) {
 
     var timezone = timezones[this.getTimezoneId(timezoneId)];
 
+    if (!timezone)
+        return 0;
+
     //  calculate the seconds off from GMT and adjust match
-    var tzOffset = timezone.utcOffset * 3600;
-    var useDate = new Date();
-    useDate = addSeconds(tzOffset, useDate);
+    if (timezone.momentName) {
+        return moment.tz.zone(timezone.momentName).offset(new Date().getTime()) * 60;
+    } else {
 
-    //	adjust value for daylight savings time
-    if (timezone.dstStart) {
+        //  remove this when all moment timezones are filled in
+        var tzOffset = timezone.utcOffset * 3600;
+        var useDate = new Date();
+        useDate = addSeconds(tzOffset, useDate);
 
-        if (useDate.getTime() >= timezone.dstStart.getTime() && useDate.getTime() < timezone.dstEnd.getTime())
-            return tzOffset + 3600;
+        //	adjust value for daylight savings time
+        if (timezone.dstStart) {
+
+            if (useDate.getTime() >= timezone.dstStart.getTime() && useDate.getTime() < timezone.dstEnd.getTime())
+                return tzOffset + 3600;
+        }
+        return tzOffset;
     }
-    return tzOffset;
 }
 
 export function currentDatetime(utcOffset: number = 0) {
