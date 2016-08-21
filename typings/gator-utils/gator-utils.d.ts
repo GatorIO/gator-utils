@@ -52,13 +52,15 @@ declare module 'gator-utils' {
     }
 
     export module epoch {
-        export var timezones:{
-            code: string;
-            name: string;
-            utcOffset?: number;
-            dstStart?: Date;
-            dstEnd?: Date;
-        }[];
+
+        export interface Timezone {
+            code: string,
+            name: string,
+            momentName: string
+        }
+
+        export var timezones:{ [id: number]: Timezone };
+
         export enum DateIntervals {
             second = 0,
             minute = 1,
@@ -70,6 +72,8 @@ declare module 'gator-utils' {
             year = 7,
         }
         export function getTimezoneId(timezone:any):number;
+
+        export function getTimezone(timezone:any);
 
         export function utcOffset(timezoneId:number):number;
 
@@ -114,8 +118,6 @@ declare module 'gator-utils' {
         export function month(date?:Date):number;
 
         export function quarter(date?:Date):number;
-
-        export function formatTimezone(param:string);
 
         export function currentMonth(utcOffset?:number):Date;
 

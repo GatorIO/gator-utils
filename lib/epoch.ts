@@ -9,7 +9,13 @@ var moment = require("moment-timezone");
  *
  */
 
-export var timezones: Array<{ code: string; name: string; momentName?: string, utcOffset?: number; dstStart?: Date; dstEnd?: Date; }> = [];
+export interface Timezone {
+    code: string,
+    name: string,
+    momentName: string
+}
+
+export var timezones: { [id: number]: Timezone };
 
 timezones[0] = { code: 'UTC', momentName: 'UTC', name: 'Coordinated Universal Time (UTC)' };
 timezones[1] = { code: 'MIT', momentName: 'Pacific/Midway', name: 'Midway Islands Time (MIT)' };
@@ -83,6 +89,16 @@ export function getTimezoneId(timezone: any): number {
     else {
         return timezone;
     }
+}
+
+//  get a timezone object from a code
+export function getTimezone(timezone: any) {
+    var id = getTimezoneId(timezone);
+
+    if (id)
+        return timezones[id];
+
+    return timezones[0];
 }
 
 //  The current timezone offset in seconds that adjusts for DST.
@@ -352,38 +368,5 @@ export function quarter(date?: Date) {
     var q1 = Math.floor(date1.getMonth() / 4);
     var q2 = Math.floor(date.getMonth() / 4);
     return (date.getUTCFullYear() - date1.getUTCFullYear()) * 4 + (q2 - q1);
-}
-
-//  Convert a timezone description or id into a formatted timezone id
-export function formatTimezone(param: string) {
-    var timezoneId: string = 'PST';
-
-    //  get timezone
-    if (param && typeof param == 'string') {
-
-        //  pull timezone id out of timezone description
-        if (param.indexOf('(') > -1) {
-            timezoneId = param.substr(param.indexOf('(') + 1, 3).toUpperCase();
-        } else {
-            timezoneId = param;
-        }
-    }
-
-    var timezoneFound = false;
-
-    //  validate timezone
-    for (var i = 0; i < timezones.length; i++) {
-
-        if (timezones[i + 1].code == timezoneId) {
-            timezoneFound = true;
-            break;
-        }
-    }
-
-    if (!timezoneFound) {
-        timezoneId = null;  //  indicates error
-    }
-
-    return timezoneId;
 }
 
