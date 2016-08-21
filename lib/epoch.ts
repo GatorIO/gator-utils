@@ -15,7 +15,7 @@ export interface Timezone {
     momentName: string
 }
 
-export var timezones: { [id: number]: Timezone };
+export var timezones: { [id: number]: Timezone } = {};
 
 timezones[0] = { code: 'UTC', momentName: 'UTC', name: 'Coordinated Universal Time (UTC)' };
 timezones[1] = { code: 'MIT', momentName: 'Pacific/Midway', name: 'Midway Islands Time (MIT)' };
