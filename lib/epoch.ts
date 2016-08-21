@@ -11,41 +11,41 @@ var moment = require("moment-timezone");
 
 export var timezones: Array<{ code: string; name: string; momentName?: string, utcOffset?: number; dstStart?: Date; dstEnd?: Date; }> = [];
 
-timezones[0] = { code: 'UTC', name: 'UTC 0:00 - Coordinated Universal Time (UTC)', utcOffset: 0 };
-timezones[1] = { code: 'MIT', name: 'UTC -11:00 - Midway Islands Time (MIT)', utcOffset: -11 };
-timezones[2] = { code: 'HST', name: 'UTC -10:00 - Hawaii Standard Time (HST)', utcOffset: -10 };
-timezones[3] = { code: 'AST', momentName: 'US/Alaska', name: 'UTC -9:00 - Alaska Standard Time (AST)', utcOffset: -9, dstStart: new Date(Date.UTC(2016, 2, 13, 2)), dstEnd: new Date(Date.UTC(2016, 10, 6, 2)) };
-timezones[4] = { code: 'PST', momentName: 'US/Pacific', name: 'UTC -8:00 - Pacific Standard Time (PST)', utcOffset: -8, dstStart: new Date(Date.UTC(2016, 2, 13, 2)), dstEnd: new Date(Date.UTC(2016, 10, 6, 2)) };
-timezones[5] = { code: 'PNT', name: 'UTC -7:00 - Phoenix Standard Time (PNT)', utcOffset: -7 };
-timezones[6] = { code: 'MST', name: 'UTC -7:00 - Mountain Standard Time (MST)', utcOffset: -7, dstStart: new Date(Date.UTC(2016, 2, 13, 2)), dstEnd: new Date(Date.UTC(2016, 10, 6, 2)) };
-timezones[7] = { code: 'CST', name: 'UTC -6:00 - Central Standard Time (CST)', utcOffset: -6, dstStart: new Date(Date.UTC(2016, 2, 13, 2)), dstEnd: new Date(Date.UTC(2016, 10, 6, 2)) };
-timezones[8] = { code: 'EST', name: 'UTC -5:00 - Eastern Standard Time (EST)', utcOffset: -5, dstStart: new Date(Date.UTC(2016, 2, 13, 2)), dstEnd: new Date(Date.UTC(2016, 10, 6, 2)) };
-timezones[9] = { code: 'IET', name: 'UTC -5:00 - Indiana Eastern Standard Time (IET)', utcOffset: -5 };
-timezones[10] = { code: 'PRT', name: 'UTC -4:00 - Puerto Rico/US Virgin Islands Time (PRT)', utcOffset: -4 };
-timezones[11] = { code: 'CNT', name: 'UTC -3:30 - Canada Newfoundland Time (CNT)', utcOffset: -3.5, dstStart: new Date(Date.UTC(2016, 2, 13, 1)), dstEnd: new Date(Date.UTC(2016, 10, 6, 1)) };
-timezones[12] = { code: 'AGT', name: 'UTC -3:00 - Argentina Standard Time (AGT)', utcOffset: -3 };
-timezones[13] = { code: 'BET', name: 'UTC -3:00 - Brazil Eastern Time (BET)', utcOffset: -3 };
-timezones[14] = { code: 'CAT', name: 'UTC -1:00 - Central African Time (CAT)', utcOffset: -1 };
-timezones[15] = { code: 'GMT', name: 'UTC 0:00 - Greenwich Mean Time (GMT)', utcOffset: 0, dstStart: new Date(Date.UTC(2016, 2, 27, 1)), dstEnd: new Date(Date.UTC(2016, 9, 30, 1)) };
-timezones[16] = { code: 'ECT', name: 'UTC +1:00 - European Central Time (ECT)', utcOffset: 1, dstStart: new Date(Date.UTC(2016, 2, 27, 1)), dstEnd: new Date(Date.UTC(2016, 9, 30, 1)) };
-timezones[17] = { code: 'EET', name: 'UTC +1:00 - Eastern European Time (EET)', utcOffset: 1, dstStart: new Date(Date.UTC(2016, 2, 27, 1)), dstEnd: new Date(Date.UTC(2016, 9, 30, 1)) };
-timezones[18] = { code: 'ART', name: 'UTC +2:00 - (Arabic) Egypt Standard Time (ART)', utcOffset: 2 };
-timezones[19] = { code: 'EAT', name: 'UTC +3:00 - Eastern African Time (EAT)', utcOffset: 3 };
-timezones[20] = { code: 'MET', name: 'UTC +3:30 - Middle East Time (MET)', utcOffset: 3.5 };
-timezones[21] = { code: 'NET', name: 'UTC +4:00 - Near East Time (NET)', utcOffset: 4 };
-timezones[22] = { code: 'PLT', name: 'UTC +5:00 - Pakistan Lahore Time (PLT)', utcOffset: 5 };
-timezones[23] = { code: 'IST', name: 'UTC +5:30 - India Standard Time (IST)', utcOffset: 5.5 };
-timezones[24] = { code: 'BST', name: 'UTC +6:00 - Bangladesh Standard Time (BST)', utcOffset: 6 };
-timezones[25] = { code: 'VST', name: 'UTC +7:00 - Vietnam Standard Time (VST)', utcOffset: 7 };
-timezones[26] = { code: 'CTT', name: 'UTC +8:00 - China Taiwan Time (CTT)', utcOffset: 8 };
-timezones[27] = { code: 'JST', name: 'UTC +9:00 - Japan Standard Time (JST)', utcOffset: 9 };
-timezones[28] = { code: 'ACT', name: 'UTC +9:30 - Australia Central Time (ACT)', utcOffset: 9.5 };
-timezones[29] = { code: 'AET', name: 'UTC +10:00 - Australia Eastern Time (AET)', utcOffset: 10 };
-timezones[30] = { code: 'SST', name: 'UTC +11:00 - Solomon Standard Time (SST)', utcOffset: 11 };
-timezones[31] = { code: 'NST', name: 'UTC +12:00 - New Zealand Standard Time (NST)', utcOffset: 12, dstStart: new Date(Date.UTC(2016, 8, 25, 2)), dstEnd: new Date(Date.UTC(2017, 4, 3, 3)) };
-timezones[32] = { code: 'PXT', name: 'UTC -8:00 - Mexico/Pacific Standard Time (PXT)', utcOffset: -8, dstStart: new Date(Date.UTC(2016, 3, 3, 2)), dstEnd: new Date(Date.UTC(2016, 9, 30, 2)) };
-timezones[33] = { code: 'MXT', name: 'UTC -7:00 - Mexico/Mountain Standard Time (MXT)', utcOffset: -7, dstStart: new Date(Date.UTC(2016, 3, 3, 2)), dstEnd: new Date(Date.UTC(2016, 9, 30, 2)) };
-timezones[34] = { code: 'CXT', name: 'UTC -6:00 - Mexico/Central Standard Time (CXT)', utcOffset: -6, dstStart: new Date(Date.UTC(2016, 3, 3, 2)), dstEnd: new Date(Date.UTC(2016, 9, 30, 2)) };
+timezones[0] = { code: 'UTC', momentName: 'UTC', name: 'Coordinated Universal Time (UTC)' };
+timezones[1] = { code: 'MIT', momentName: 'Pacific/Midway', name: 'Midway Islands Time (MIT)' };
+timezones[2] = { code: 'HST', momentName: 'US/Hawaii', name: 'Hawaii Time (HST)' };
+timezones[3] = { code: 'AST', momentName: 'US/Alaska', name: 'Alaska Time (AST)' };
+timezones[4] = { code: 'PST', momentName: 'US/Pacific', name: 'Pacific Time (PST)' };
+timezones[5] = { code: 'PNT', momentName: 'America/Phoenix', name: 'Phoenix Time (PNT)' };
+timezones[6] = { code: 'MST', momentName: 'US/Mountain', name: 'Mountain Time (MST)' };
+timezones[7] = { code: 'CST', momentName: 'US/Central', name: 'Central Time (CST)' };
+timezones[8] = { code: 'EST', momentName: 'US/Eastern', name: 'Eastern Time (EST)' };
+timezones[9] = { code: 'IET', momentName: 'US/East-Indiana', name: 'Indiana Eastern Time (IET)' };
+timezones[10] = { code: 'PRT', momentName: 'America/Puerto_Rico', name: 'Puerto Rico/US Virgin Islands Time (PRT)' };
+timezones[11] = { code: 'CNT', momentName: 'Canada/Newfoundland', name: 'Canada Newfoundland Time (CNT)' };
+timezones[12] = { code: 'AGT', momentName: 'America/Argentina/Buenos_Aires', name: 'Argentina Time (AGT)' };
+timezones[13] = { code: 'BET', momentName: 'Brazil/East', name: 'Brazil Eastern Time (BET)' };
+timezones[14] = { code: 'CAT', momentName: 'Africa/Lusaka', name: 'Central African Time (CAT)' };
+timezones[15] = { code: 'GMT', momentName: 'Greenwich', name: 'Greenwich Mean Time (GMT)' };
+timezones[16] = { code: 'ECT', momentName: 'Europe/Berlin', name: 'European Central Time (ECT)' };
+timezones[17] = { code: 'EET', momentName: 'Europe/Bucharest', name: 'Eastern European Time (EET)' };
+timezones[18] = { code: 'ART', momentName: 'Egypt', name: 'Egypt Time (ART)' };
+timezones[19] = { code: 'EAT', momentName: 'Africa/Khartoum', name: 'Eastern African Time (EAT)' };
+timezones[20] = { code: 'BWT', momentName: 'Brazil/West', name: 'Brazil Western Time (BWT)' };
+timezones[21] = { code: 'MSK', momentName: 'Europe/Moscow', name: 'Moscow Time (MSK)' };
+timezones[22] = { code: 'PKT', momentName: 'Asia/Karachi', name: 'Pakistan Time (PKT)' };
+timezones[23] = { code: 'IT', momentName: 'Asia/Calcutta', name: 'India Time (IT)' };
+timezones[24] = { code: 'BST', momentName: 'Asia/Dhaka', name: 'Bangladesh Time (BST)' };
+timezones[25] = { code: 'VST', momentName: 'Asia/Ho_Chi_Minh', name: 'Vietnam Time (VST)' };
+timezones[26] = { code: 'CTT', momentName: 'Asia/Taipei', name: 'China Taiwan Time (CTT)' };
+timezones[27] = { code: 'JST', momentName: 'Asia/Tokyo', name: 'Japan Time (JST)' };
+timezones[28] = { code: 'ACT', momentName: 'Australia/Adelaide', name: 'Australia Central Time (ACT)' };
+timezones[29] = { code: 'AET', momentName: 'Australia/Sydney', name: 'Australia Eastern Time (AET)' };
+timezones[30] = { code: 'AWT', momentName: 'Australia/Perth', name: 'Australia Western Time (AET)' };
+timezones[31] = { code: 'NST', momentName: 'Pacific/Auckland', name: 'New Zealand Time (NST)' };
+timezones[32] = { code: 'PXT', momentName: 'America/Hermosillo', name: 'Mexico/Pacific Time (PXT)' };
+timezones[33] = { code: 'IST', momentName: 'Israel', name: 'Israel Time (IST)' };
+timezones[34] = { code: 'CXT', momentName: 'America/Mexico_City', name: 'Mexico/Central Time (CXT)' };
 
 export enum DateIntervals {
     second,
@@ -68,12 +68,12 @@ export function getTimezoneId(timezone: any): number {
         for (var key in timezones) {
 
             if (timezones.hasOwnProperty(key)) {
-                timezone = timezones[key];
+                var tz = timezones[key];
 
-                if (timezone.code.toUpperCase() == timezone.toUpperCase())
+                if (tz.code.toUpperCase() == timezone.toUpperCase())
                     return +key;
 
-                if (timezone.momentName && timezone.momentName.toUpperCase() == timezone.toUpperCase())
+                if (tz.momentName && tz.momentName.toUpperCase() == timezone.toUpperCase())
                     return +key;
             }
         }
@@ -93,24 +93,8 @@ export function utcOffset(timezoneId: number) {
     if (!timezone)
         return 0;
 
-    //  calculate the seconds off from GMT and adjust match
-    if (timezone.momentName) {
-        return moment.tz.zone(timezone.momentName).offset(new Date().getTime()) * 60;
-    } else {
-
-        //  remove this when all moment timezones are filled in
-        var tzOffset = timezone.utcOffset * 3600;
-        var useDate = new Date();
-        useDate = addSeconds(tzOffset, useDate);
-
-        //	adjust value for daylight savings time
-        if (timezone.dstStart) {
-
-            if (useDate.getTime() >= timezone.dstStart.getTime() && useDate.getTime() < timezone.dstEnd.getTime())
-                return tzOffset + 3600;
-        }
-        return tzOffset;
-    }
+    //  moment timezone uses opposite direction for offset
+    return -moment.tz.zone(timezone.momentName).offset(new Date().getTime()) * 60;
 }
 
 export function currentDatetime(utcOffset: number = 0) {
