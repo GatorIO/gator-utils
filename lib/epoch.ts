@@ -84,6 +84,16 @@ export function getTimezoneId(timezone: any): number {
             }
         }
 
+        //  since nothing was found, try to guess common time zone
+        if (timezone.indexOf('EASTERN TIME') > -1)
+            return 8;
+        if (timezone.indexOf('CENTRAL TIME') > -1)
+            return 7;
+        if (timezone.indexOf('MOUNTAIN TIME') > -1)
+            return 6;
+        if (timezone.indexOf('PACIFIC TIME') > -1)
+            return 4;
+
         return -1;      // not found
     }
     else {
