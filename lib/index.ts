@@ -6,7 +6,7 @@ export var ip = require('./ip');
 export var epoch = require('./epoch');
 export var config = require('./config');
 import crypto = require('crypto');
-import clone = require('clone');
+import cloneLib = require('clone');
 
 /*
  Common utility functions
@@ -181,7 +181,7 @@ export function clone(o: Object): Object {
     if (!o || typeof (o) != 'object')
         return o;
 
-    return clone(o);
+    return cloneLib(o);
 }
 
 //  Concatenate two objects into the first object
