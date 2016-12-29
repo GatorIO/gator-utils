@@ -50,6 +50,21 @@ export function isNumeric(n) {
     return !isNaN(parseFloat(n)) && isFinite(n);
 }
 
+export function currencyToNumber(n) {
+
+    if (typeof n == 'string') {
+        n = n.replace('$', '');
+        n = n.replace('€', '');
+        n = n.replace('£', '');
+        n = n.replace('¥', '');
+    }
+
+    if (isNumeric(n))
+        return +n;
+    else
+        return null;
+}
+
 //  Convert an integer to a 4 byte array
 export function toBytes(num: number) {
     var data = new Uint8Array(4);

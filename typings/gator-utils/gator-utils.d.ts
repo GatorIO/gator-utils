@@ -4,6 +4,7 @@ declare module 'gator-utils' {
     export function isArray(obj:any):boolean;
     export function prefixAttributes(obj:Object, prefix:string):Object;
     export function isNumeric(n:any):boolean;
+    export function currencyToNumber(n:any):number;
     export function toBytes(num:number):Uint8Array;
     export function uuid(len?:number, radix?:number):string;
     export function base62encode(i:any):string;
