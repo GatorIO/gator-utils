@@ -30,6 +30,7 @@ declare module 'gator-utils' {
     export function hash(input:string):number;
     export function noCache(res:any):void;
     export function stripProtocol(url:string):string;
+    export function parseBoolean(value, nullOnFailure?:boolean);
 
     export module config {
         export function env(): string;
