@@ -1,5 +1,5 @@
 /// <reference path="../typings/moment-timezone/moment-timezone.d.ts" />
-var moment = require("moment-timezone");
+let moment = require("moment-timezone");
 
 /**
  * Date and epoch functions
@@ -15,7 +15,7 @@ export interface Timezone {
     momentName: string
 }
 
-export var timezones: { [id: number]: Timezone } = {};
+export let timezones: { [id: number]: Timezone } = {};
 
 timezones[0] = { code: 'UTC', momentName: 'UTC', name: 'Coordinated Universal Time (UTC)' };
 timezones[1] = { code: 'MIT', momentName: 'Pacific/Midway', name: 'Midway Islands Time (MIT)' };
@@ -71,10 +71,10 @@ export function getTimezoneId(timezone: any): number {
 
         timezone = timezone.toUpperCase();
 
-        for (var key in timezones) {
+        for (let key in timezones) {
 
             if (timezones.hasOwnProperty(key)) {
-                var tz = timezones[key];
+                let tz = timezones[key];
 
                 if (tz.code.toUpperCase() == timezone.toUpperCase())
                     return +key;
@@ -103,7 +103,7 @@ export function getTimezoneId(timezone: any): number {
 
 //  get a timezone object from a code
 export function getTimezone(timezone: any) {
-    var id = getTimezoneId(timezone);
+    let id = getTimezoneId(timezone);
 
     if (id)
         return timezones[id];
@@ -114,7 +114,7 @@ export function getTimezone(timezone: any) {
 //  The current timezone offset in seconds that adjusts for DST.
 export function utcOffset(timezoneId: number) {
 
-    var timezone = timezones[this.getTimezoneId(timezoneId)];
+    let timezone = timezones[this.getTimezoneId(timezoneId)];
 
     if (!timezone)
         return 0;
@@ -124,27 +124,27 @@ export function utcOffset(timezoneId: number) {
 }
 
 export function currentDatetime(utcOffset: number = 0) {
-    var date = new Date();
+    let date = new Date();
     return new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds() + utcOffset));
 }
 
 export function toUTC(strDate: string, utcOffset: number = 0) {
-    var date = new Date(Date.parse(strDate));
+    let date = new Date(Date.parse(strDate));
 
     //  for dev purposes, adjust the result by the timezone offset
-    var localOffset = date.getTimezoneOffset() * 60;
+    let localOffset = date.getTimezoneOffset() * 60;
 
     return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds() + utcOffset + localOffset));
 }
 
 export function currentDate(utcOffset: number = 0) {
-    var date = new Date();
+    let date = new Date();
 
     if (utcOffset == 0) {
         return new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
     }
 
-    var adjustedDate = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds() + utcOffset));
+    let adjustedDate = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds() + utcOffset));
 
     return new Date(Date.UTC(adjustedDate.getUTCFullYear(), adjustedDate.getUTCMonth(), adjustedDate.getUTCDate()));
 }
@@ -162,13 +162,13 @@ export function monthCode(date?: Date, utcOffset?: number): string {
 
 //  Format a date into yyyy-mm-dd hh:mm:ss.  If the date has no epoch component, return in the format yyyy-mm-dd
 export function dateToString(date: Date, includeTime: boolean = true): string {
-    var day = date.getUTCDate();
-    var month = date.getUTCMonth() + 1;
-    var hour = date.getUTCHours();
-    var minute = date.getUTCMinutes();
-    var second = date.getUTCSeconds();
+    let day = date.getUTCDate();
+    let month = date.getUTCMonth() + 1;
+    let hour = date.getUTCHours();
+    let minute = date.getUTCMinutes();
+    let second = date.getUTCSeconds();
 
-    var ret = date.getUTCFullYear() + '-' + (month <= 9 ? '0' + month.toString() : month.toString()) + '-' + (day <= 9 ? '0' + day.toString() : day.toString());
+    let ret = date.getUTCFullYear() + '-' + (month <= 9 ? '0' + month.toString() : month.toString()) + '-' + (day <= 9 ? '0' + day.toString() : day.toString());
 
     if (includeTime && (hour != 0 || minute != 0 || second != 0))
         ret += ' ' + (hour <= 9 ? '0' + hour.toString() : hour.toString()) + ":" + (minute <= 9 ? '0' + minute.toString() : minute.toString()) + ':' + (second <= 9 ? '0' + second.toString() : second.toString());
@@ -287,7 +287,7 @@ export function millisecond(date?: Date) {
     if (!date)
         date = new Date();
 
-    var msFromEpoch: number = date.getTime();
+    let msFromEpoch: number = date.getTime();
     return msFromEpoch - 915148800000;   // convert to utc milliseconds from 1999-01-01
 }
 
@@ -297,7 +297,7 @@ export function second(date?: Date) {
     if (!date)
         date = new Date();
 
-    var secondsFromEpoch: number = date.getTime() / 1000;
+    let secondsFromEpoch: number = date.getTime() / 1000;
     return Math.round(secondsFromEpoch) - 915148800;   // convert to utc seconds from 1999-01-01
 }
 
@@ -308,11 +308,11 @@ export function minute(date?: Date) {
         date = new Date();
 
     //  strip off secs off dates
-    var date1 = start();
-    var date2 = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes()));
+    let date1 = start();
+    let date2 = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes()));
 
-    var seconds1: number = Math.round(date1.getTime() / 1000) - 915148800;
-    var seconds2: number = Math.round(date2.getTime() / 1000) - 915148800;
+    let seconds1: number = Math.round(date1.getTime() / 1000) - 915148800;
+    let seconds2: number = Math.round(date2.getTime() / 1000) - 915148800;
     return Math.round((seconds2 - seconds1) / 60);
 }
 
@@ -323,11 +323,11 @@ export function hour(date?: Date) {
         date = new Date();
 
     //  strip off minutes/secs off dates
-    var date1 = start();
-    var date2 = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours()));
+    let date1 = start();
+    let date2 = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours()));
 
-    var seconds1: number = Math.round(date1.getTime() / 1000) - 915148800;
-    var seconds2: number = Math.round(date2.getTime() / 1000) - 915148800;
+    let seconds1: number = Math.round(date1.getTime() / 1000) - 915148800;
+    let seconds2: number = Math.round(date2.getTime() / 1000) - 915148800;
     return Math.round((seconds2 - seconds1) / 3600);
 }
 
@@ -338,11 +338,11 @@ export function day(date?: Date) {
         date = new Date();
 
     //  strip off hours/minutes/secs off dates
-    var date1 = start();
-    var date2 = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
+    let date1 = start();
+    let date2 = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
 
-    var seconds1: number = Math.round(date1.getTime() / 1000) - 915148800;
-    var seconds2: number = Math.round(date2.getTime() / 1000) - 915148800;
+    let seconds1: number = Math.round(date1.getTime() / 1000) - 915148800;
+    let seconds2: number = Math.round(date2.getTime() / 1000) - 915148800;
     return Math.floor((seconds2 - seconds1) / 3600 / 24);
 }
 
@@ -352,9 +352,9 @@ export function week(date?: Date) {
     if (!date)
         date = new Date();
 
-    var date1 = start();
-    var seconds1: number = Math.round(date1.getTime() / 1000) - 915148800 - (24 * 3600 * 5);
-    var seconds2: number = Math.round(date.getTime() / 1000) - 915148800;
+    let date1 = start();
+    let seconds1: number = Math.round(date1.getTime() / 1000) - 915148800 - (24 * 3600 * 5);
+    let seconds2: number = Math.round(date.getTime() / 1000) - 915148800;
     return Math.floor((seconds2 - seconds1) / 3600 / 24 / 7);
 }
 
@@ -364,7 +364,7 @@ export function month(date?: Date) {
     if (!date)
         date = new Date();
 
-    var date1 = start();
+    let date1 = start();
     return (date.getUTCFullYear() - date1.getUTCFullYear()) * 12 + (date.getUTCMonth() - date1.getUTCMonth());
 }
 
@@ -374,9 +374,9 @@ export function quarter(date?: Date) {
     if (!date)
         date = new Date();
 
-    var date1 = start();
-    var q1 = Math.floor(date1.getMonth() / 4);
-    var q2 = Math.floor(date.getMonth() / 4);
+    let date1 = start();
+    let q1 = Math.floor(date1.getMonth() / 4);
+    let q2 = Math.floor(date.getMonth() / 4);
     return (date.getUTCFullYear() - date1.getUTCFullYear()) * 4 + (q2 - q1);
 }
 

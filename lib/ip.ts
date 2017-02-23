@@ -27,8 +27,8 @@ export function remoteAddress(req): string {
     //   header often contains intranet IP addresses, like 10.1.1.1.  Therefore, only use it in special cases.
     if (req.headers['x-forwarded-for']) {
 
-        var xf: string = req.headers['x-forwarded-for'].trim();
-        var xfs: Array<string> = null;
+        let xf: string = req.headers['x-forwarded-for'].trim();
+        let xfs: Array<string> = null;
 
         //  see if multiple addresses are in the XFF header
         if (xf.indexOf(",") > -1) {
@@ -42,9 +42,9 @@ export function remoteAddress(req): string {
         if (xfs != null) {
 
             //  get first public address, since multiple private routings can occur and be added to forwarded list
-            for (var i = 0; i < xfs.length; i++) {
+            for (let i = 0; i < xfs.length; i++) {
 
-                var ipTrim: string = xfs[i].trim();
+                let ipTrim: string = xfs[i].trim();
 
                 //  ipv4 addresses sometimes are in ipv6 format:  ::ffff:1.2.3.4 - strip off the ipv6 part
                 if (ipTrim.substr(0, 7) == '::ffff:' && ipTrim.split('.').length == 4)
@@ -74,7 +74,7 @@ export function remoteAddress(req): string {
         return xf;
     } else {
 
-        var xf: string = req.connection.remoteAddress;
+        let xf: string = req.connection.remoteAddress;
 
         //  a tiny % of hits have an unknown ip address, so return a default address
         if (xf.substring(0, 7) == "unknown") {
@@ -94,9 +94,9 @@ export function isLoopback(addr) {
 //  Return a 32-bit integer hash from an IPv6 address.  This uses a variation of the murmur3 hash algorithm.  The collision
 //  rate is small, roughly one in 100,000,000.
 export function hashIPV6(ip: string): number {
-    var hash = 0, len: number;
+    let hash = 0, len: number;
 
-    for (var i = 0, len = ip.length; i < len; i++) {
+    for (let i = 0, len = ip.length; i < len; i++) {
         hash  = ((hash << 5) - hash) + ip.charCodeAt(i);
         hash |= 0; // Convert to 32-bit integer
     }
@@ -114,7 +114,7 @@ export function hash(address: string): number {
 
     } else {
 
-        var _ip = address.split('.');
+        let _ip = address.split('.');
 
         //  reverse the order of bytes of the IP address for better shard distribution
         return Number(_ip[0]) * 16777216 +
@@ -135,7 +135,7 @@ export function toNumber(address: string, reverse: boolean = false): number {
 
     } else {
 
-        var _ip = address.split('.');
+        let _ip = address.split('.');
 
         //  create a number from the octets
         if (reverse)
@@ -162,8 +162,8 @@ export function compress(address: string): any {
         return toNumber32(address);
     } else {
 
-        var parts = address.split(':');
-        var bytes = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        let parts = address.split(':');
+        let bytes = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
         for (var i = 0; i < parts.length; i++) {
 
@@ -177,9 +177,9 @@ export function compress(address: string): any {
             }
         }
 
-        var index = 15;
+        let index = 15;
 
-        for (var j = parts.length - 1; j > i; j--) {
+        for (let j = parts.length - 1; j > i; j--) {
             parts[j] = ('000' + parts[j]).slice(-4);        //  deal with missing leading zeroes
             bytes[index - 1] = parseInt(parts[j].substr(0, 2), 16);
             bytes[index] = parseInt(parts[j].substr(2, 2), 16);
@@ -196,7 +196,7 @@ export function compress(address: string): any {
 export function decompress(address: any): any {
 
     if (typeof address == 'number') {
-        var addr = utils.toBytes(address);
+        let addr = utils.toBytes(address);
 
         return addr[3] + '.' +
             addr[2] + '.' +
@@ -204,10 +204,10 @@ export function decompress(address: any): any {
             addr[0];
     } else {
 
-        var ret: string = '';
+        let ret: string = '';
 
-        for (var i = 0; i < address.length; i += 2) {
-            var byte = '0' + address[i].toString(16);
+        for (let i = 0; i < address.length; i += 2) {
+            let byte = '0' + address[i].toString(16);
             ret += byte.length == 2 ? byte : byte.substr(1, 2);
 
             byte = '0' + address[i + 1].toString(16);
@@ -232,10 +232,10 @@ export function toNumber32(address: string): number {
 
     } else {
 
-        var _ip = address.split('.');
+        let _ip = address.split('.');
 
         //  create a number from the octets
-        var num: number = Number(_ip[0]) * 16777216 +
+        let num: number = Number(_ip[0]) * 16777216 +
             Number(_ip[1]) * 65536 +
             Number(_ip[2]) * 256 +
             Number(_ip[3]);
@@ -250,7 +250,7 @@ export function toNumber32(address: string): number {
 //  Convert an IP number (as created by the toNumber function) to an IP address
 export function fromNumber(ipNumber: number): string {
 
-    var addr = utils.toBytes(ipNumber);
+    let addr = utils.toBytes(ipNumber);
 
     return addr[3] + '.' +
         addr[2] + '.' +

@@ -2,9 +2,9 @@
 /// <reference path="ip.ts" />
 /// <reference path="../typings/node/node.d.ts" />
 /// <reference path="../typings/clone/clone.d.ts" />
-export var ip = require('./ip');
-export var epoch = require('./epoch');
-export var config = require('./config');
+export let ip = require('./ip');
+export let epoch = require('./epoch');
+export let config = require('./config');
 import crypto = require('crypto');
 import cloneLib = require('clone');
 
@@ -12,7 +12,7 @@ import cloneLib = require('clone');
  Common utility functions
  */
 
-var iconv = require("iconv-lite");
+let iconv = require("iconv-lite");
 
 export function superRandom(bytes: number = 20) {
     return crypto.randomBytes(bytes).toString('base64');
@@ -26,7 +26,7 @@ export function isArray(obj): boolean {
 //  Add a prefix to all the attributes.  This is used when manipulating nested objects.
 export function prefixAttributes(obj: Object, prefix: string): Object {
 
-    for (var attrib in obj) {
+    for (let attrib in obj) {
 
         if (obj.hasOwnProperty(attrib)) {
 
@@ -67,9 +67,9 @@ export function currencyToNumber(n) {
 
 //  Convert an integer to a 4 byte array
 export function toBytes(num: number) {
-    var data = new Uint8Array(4);
+    let data = new Uint8Array(4);
 
-    for (var i = 0; i < 4; i++) {
+    for (let i = 0; i < 4; i++) {
         data[i] = (num >> (i * 8)) & 0xff;
     }
 
@@ -77,9 +77,9 @@ export function toBytes(num: number) {
 }
 
 export function uuid(len?: number, radix?: number) {
-    var CHARS = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
+    let CHARS = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
 
-    var chars = CHARS, uuid = [], i;
+    let chars = CHARS, uuid = [], i;
 
     radix = radix || chars.length;
 
@@ -88,7 +88,7 @@ export function uuid(len?: number, radix?: number) {
         for (i = 0; i < len; i++) uuid[i] = chars[0 | Math.random() * radix];
     } else {
         // rfc4122, version 4 form
-        var r;
+        let r;
 
         // rfc4122 requires these characters
         uuid[8] = uuid[13] = uuid[18] = uuid[23] = '-';
@@ -111,7 +111,7 @@ export function uuid(len?: number, radix?: number) {
  */
 export function base62decode(a: string): number {
 
-    var b, c, d;
+    let b, c, d;
 
     for (
         b = c = ( // 'false - 1' will return '-1' and 'true - 1' will return '0'
@@ -131,7 +131,7 @@ export function base62decode(a: string): number {
  */
 export function base62encode(a): string {
 
-    var b, c;
+    let b, c;
 
     for (
         a = a !== +a || a % 1 ? -1 : a, b = ""; // if not a base10 integer, 'a' will be '-1'
@@ -159,9 +159,9 @@ export function isUTF8(charset) {
 }
 
 export function padLeft(value: any, padChar: string, padCount: number) {
-    var str = "" + value;
-    var padBuff = Array(padCount + 1);
-    var pad = padBuff.join(padChar);
+    let str = "" + value;
+    let padBuff = Array(padCount + 1);
+    let pad = padBuff.join(padChar);
     return pad.substring(0, pad.length - str.length) + str
 }
 
@@ -175,8 +175,8 @@ export function urlDecode(str, charset) {
         }
     }
 
-    var bytes = [];
-    for (var i = 0; i < str.length;) {
+    let bytes = [];
+    for (let i = 0; i < str.length;) {
         if (str[i] === '%') {
             i++;
             bytes.push(parseInt(str.substring(i, i + 2), 16));
@@ -186,11 +186,11 @@ export function urlDecode(str, charset) {
             i++;
         }
     }
-    var buf = new Buffer(bytes);
+    let buf = new Buffer(bytes);
     return iconv.decode(buf, charset);
 }
 
-//  SHALLOW clone an object into a new object.  No functions will be carried over.
+//  Deep clone an object into a new object.  Functions will be carried over.
 export function clone(o: Object): Object {
 
     if (!o || typeof (o) != 'object')
@@ -205,7 +205,7 @@ export function extend(o1: Object, o2: Object): Object {
     if (o1 == null || o2 == null)
         return o1;
 
-    for (var key in o2)
+    for (let key in o2)
         if (o2.hasOwnProperty(key))
             o1[key] = o2[key];
 
@@ -216,23 +216,23 @@ export function extend(o1: Object, o2: Object): Object {
  * returns true if the property was found and copied
  */
 export function copyProperty(
-    /**
+    /*
      * The property you are copying
      */
     property: string,
-    /**
+    /*
      * The object you are copying to
      */
     o1: Object,
-    /**
+    /*
      * The object you are copying from
      */
     o2: Object,
-    /**
+    /*
      * Allow the copying of null values
      */
     allowNull: boolean = false,
-    /**
+    /*
      * Allow the copying of empty values
      */
     allowEmpty: boolean = false): boolean {
@@ -244,7 +244,7 @@ export function copyProperty(
         throw new Error('you must specify a property value');
 
     /// I felt this was far more readable than the alternative method started with
-    var copy = false;
+    let copy = false;
 
     if (o2.hasOwnProperty(property)) {
         if (allowNull && o2[property] == null) {
@@ -270,7 +270,7 @@ export function copyProperty(
 }
 
 export function isFunction(functionToCheck) {
-    var getType = {};
+    let getType = {};
     return functionToCheck && getType.toString.call(functionToCheck) === '[object Function]';
 }
 
@@ -294,7 +294,7 @@ export function trimStart(value: string, start: string) {
     if (value.length == 0) return value;
 
     start = start ? start : ' ';
-    var i = 0, val = 0;
+    let i = 0, val = 0;
 
     for (; value.charAt(i) == start && i < value.length; i++);
 
@@ -305,7 +305,7 @@ export function trimStart(value: string, start: string) {
  * Get the value from a cookie from the raw header string
  */
 export function parseCookieValueFromString(headerVal: string, key: string) {
-    var result;
+    let result;
     return (result = new RegExp('(?:^|; )' + encodeURIComponent(key) + '=([^;]*)').exec(headerVal)) ? (result[1]) : null;
 }
 
@@ -335,9 +335,9 @@ export function merge(o1: any, o2: any, overwrite: boolean): Object {
     if (!o1)
         return o2;
 
-    var o: Object = clone(o1);
+    let o: Object = clone(o1);
 
-    for (var key in o2) {
+    for (let key in o2) {
 
         if (o2.hasOwnProperty(key)) {
 
@@ -365,9 +365,9 @@ export function validEmail(email: string) {
 
 //  Collect missing arguments on a REST request
 export function missingParams(params: Object, requiredParams: Array<string>): Array<string> {
-    var missing = [];
+    let missing = [];
 
-    for (var a = 0; a < requiredParams.length; a++) {
+    for (let a = 0; a < requiredParams.length; a++) {
 
         if (!params || !params.hasOwnProperty(requiredParams[a])) {
             missing.push(requiredParams[a]);
@@ -383,7 +383,7 @@ export function missingParams(params: Object, requiredParams: Array<string>): Ar
  */
 export function guid() {
     function _p8(s?) {
-        var p = (Math.random().toString(16) + "000000000").substr(2, 8);
+        let p = (Math.random().toString(16) + "000000000").substr(2, 8);
         return s ? "-" + p.substr(0, 4) + "-" + p.substr(4, 4) : p;
     }
     return _p8() + _p8(true) + _p8(true) + _p8();
@@ -394,9 +394,9 @@ export function guid() {
 //  Params:  input - the string to hash
 export function hash(input: string): number {
 
-    var hash = 0, len: number;
+    let hash = 0, len: number;
 
-    for (var i = 0, len = input.length; i < len; i++) {
+    for (let i = 0, len = input.length; i < len; i++) {
         hash = ((hash << 5) - hash) + input.charCodeAt(i);
         hash |= 0;
     }
@@ -411,7 +411,7 @@ export function noCache(res: any) {
 
 //  strip the protocol off a URL (https://, ftp://, etc.)
 export function stripProtocol(url: string): string {
-    var ret = url;
+    let ret = url;
 
     if (url.indexOf('://') > -1)
         ret = ret.substr(url.indexOf('://') + 3);
@@ -421,8 +421,7 @@ export function stripProtocol(url: string): string {
 
 /**
  * Parses mixed type values into booleans. This is the same function as filter_var in PHP using boolean validation
- * @param  {Mixed}        value
- * @param  {Boolean}      nullOnFailure = false
+ * @value  {Boolean}      nullOnFailure = false
  * @return {Boolean|Null}
  */
 export function parseBoolean(value, nullOnFailure = false) {

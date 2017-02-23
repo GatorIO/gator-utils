@@ -11,15 +11,15 @@ export function env(): string {
 
 //  Return whether the instance is in development mode or not
 export function dev(): boolean {
-    var check: string = process.env['NODE_ENV'] || "";
+    let check: string = process.env['NODE_ENV'] || "";
     return check.toLowerCase() == 'development' || check.toLowerCase() == 'local' || check.toLowerCase() == 'dev';
 }
 
 export function settings<T>(envir: string = env()): T {
 
-    var path = '~/settings/';
+    let path = '~/settings/';
 
-    var cwd = process.cwd();
+    let cwd = process.cwd();
 
     if (cwd.indexOf('tests') > 1) {
         cwd = cwd.substr(0, cwd.indexOf('tests') - 1);
@@ -28,7 +28,7 @@ export function settings<T>(envir: string = env()): T {
         path = cwd + '/' + path.replace(/\~\//, '');
     }
 
-    var settings: T;
+    let settings: T;
 
     try {
         settings = require(path + "settings-" + envir.toLowerCase());
