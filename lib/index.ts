@@ -453,3 +453,27 @@ export function parseBoolean(value, nullOnFailure = false) {
     }
     return value;
 }
+
+//  Rename an attribute
+export function renameAttribute(obj: Object, name: string, replacement: string): Object {
+
+    for (let attrib in obj) {
+
+        if (obj.hasOwnProperty(attrib) && attrib == name) {
+
+            //  skip over arrays and $ operators
+            if (!isArray(obj) && attrib.substr(0, 1) != '$') {
+                obj[replacement] = obj[attrib];
+                delete obj[attrib];
+            }
+
+        } else {
+
+            if (typeof obj[attrib] == 'object') {
+                obj[attrib] = renameAttribute(obj[attrib], name, replacement);
+            }
+        }
+    }
+
+    return obj;
+}

@@ -31,6 +31,7 @@ declare module 'gator-utils' {
     export function noCache(res:any):void;
     export function stripProtocol(url:string):string;
     export function parseBoolean(value, nullOnFailure?:boolean);
+    export function renameAttribute(obj: Object, name: string, replacement: string): Object;
 
     export module config {
         export function env(): string;
