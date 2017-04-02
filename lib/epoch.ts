@@ -52,6 +52,9 @@ timezones[31] = { code: 'NST', momentName: 'Pacific/Auckland', name: 'New Zealan
 timezones[32] = { code: 'PXT', momentName: 'America/Hermosillo', name: 'Mexico/Pacific Time (PXT)' };
 timezones[33] = { code: 'IST', momentName: 'Israel', name: 'Israel Time (IST)' };
 timezones[34] = { code: 'CXT', momentName: 'America/Mexico_City', name: 'Mexico/Central Time (CXT)' };
+timezones[35] = { code: 'PLT', momentName: 'Asia/Karachi', name: 'Pakistan Time (PLT)' };
+timezones[36] = { code: 'SST', momentName: 'Pacific/Guadalcanal', name: 'Solomon Standard Time (SST)' };
+timezones[37] = { code: 'MXT', momentName: 'US/Mountain', name: 'Mexico/Mountain Standard Time (MXT)' };
 
 export enum DateIntervals {
     second,
