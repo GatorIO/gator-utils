@@ -1,7 +1,5 @@
 /// <reference path="epoch.ts" />
 /// <reference path="ip.ts" />
-/// <reference path="../typings/node/node.d.ts" />
-/// <reference path="../typings/clone/clone.d.ts" />
 export let ip = require('./ip');
 export let epoch = require('./epoch');
 export let config = require('./config');
@@ -14,16 +12,30 @@ import cloneLib = require('clone');
 
 let iconv = require("iconv-lite");
 
+/**
+ * Create a string of random base64 characters.
+ * @param bytes         The length of the string to create.
+ * @returns {string}
+ */
 export function superRandom(bytes: number = 20) {
     return crypto.randomBytes(bytes).toString('base64');
 }
 
-//  return whether an object is an array or not
+/**
+ * Return whether an object is an array or not.
+ * @param obj
+ * @returns {boolean}
+ */
 export function isArray(obj): boolean {
     return Object.prototype.toString.call(obj) === '[object Array]';
 }
 
-//  Add a prefix to all the attributes.  This is used when manipulating nested objects.
+/**
+ * Add a prefix to all the attributes on an object.  This is used when manipulating nested objects.
+ * @param obj
+ * @param prefix
+ * @returns {Object}
+ */
 export function prefixAttributes(obj: Object, prefix: string): Object {
 
     for (let attrib in obj) {
@@ -46,11 +58,21 @@ export function prefixAttributes(obj: Object, prefix: string): Object {
     return obj;
 }
 
+/**
+ * Return whether the parameter is a number or not.  The parameter can be a string containing a number.
+ * @param n
+ * @returns {boolean}
+ */
 export function isNumeric(n) {
     return !isNaN(parseFloat(n)) && isFinite(n);
 }
 
-export function currencyToNumber(n) {
+/**
+ * Convert string currencies to their numeric equivalent.
+ * @param n
+ * @returns {number}
+ */
+export function currencyToNumber(n): number {
 
     if (typeof n == 'string') {
         n = n.replace('$', '');
@@ -65,7 +87,11 @@ export function currencyToNumber(n) {
         return null;
 }
 
-//  Convert an integer to a 4 byte array
+/**
+ * Convert an integer to a 4 byte array.
+ * @param num
+ * @returns {Uint8Array}
+ */
 export function toBytes(num: number) {
     let data = new Uint8Array(4);
 
@@ -76,6 +102,12 @@ export function toBytes(num: number) {
     return data;
 }
 
+/**
+ * Create a UUID.
+ * @param len           The length of the id.
+ * @param radix
+ * @returns {string}
+ */
 export function uuid(len?: number, radix?: number) {
     let CHARS = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
 
@@ -107,7 +139,9 @@ export function uuid(len?: number, radix?: number) {
 }
 
 /**
- * this base62 is only safe for decoding to integers
+ * This base62 is only safe for decoding to integers.
+ * @param a
+ * @returns {any}
  */
 export function base62decode(a: string): number {
 
@@ -127,7 +161,9 @@ export function base62decode(a: string): number {
 }
 
 /**
- * this base62 is only safe for encoding integers
+ * This base62 is only safe for encoding integers
+ * @param a
+ * @returns {any}
  */
 export function base62encode(a): string {
 
@@ -150,6 +186,11 @@ export function base62encode(a): string {
     return b; // will return either an empty or a base62-encoded string
 }
 
+/**
+ * Return whether a character set is UTF8.
+ * @param charset
+ * @returns {boolean}
+ */
 export function isUTF8(charset) {
     if (!charset) {
         return true;
@@ -158,6 +199,13 @@ export function isUTF8(charset) {
     return charset === 'utf8' || charset === 'utf-8';
 }
 
+/**
+ * Pad a string on the left.
+ * @param value         The value to pad.
+ * @param padChar       The character to pad.
+ * @param padCount      The number of characters to add.
+ * @returns {string}
+ */
 export function padLeft(value: any, padChar: string, padCount: number) {
     let str = "" + value;
     let padBuff = Array(padCount + 1);
@@ -165,6 +213,12 @@ export function padLeft(value: any, padChar: string, padCount: number) {
     return pad.substring(0, pad.length - str.length) + str
 }
 
+/**
+ * Decode a URL.
+ * @param str
+ * @param charset
+ * @returns {any}
+ */
 export function urlDecode(str, charset) {
     if (isUTF8(charset)) {
 
@@ -190,7 +244,11 @@ export function urlDecode(str, charset) {
     return iconv.decode(buf, charset);
 }
 
-//  Deep clone an object into a new object.  Functions will be carried over.
+/**
+ * Deep clone an object into a new object.  Functions will be carried over.
+ * @param o
+ * @returns {Object}
+ */
 export function clone(o: Object): Object {
 
     if (!o || typeof (o) != 'object')
@@ -199,7 +257,12 @@ export function clone(o: Object): Object {
     return cloneLib(o);
 }
 
-//  Concatenate two objects into the first object
+/**
+ * Concatenate two objects into the first object
+ * @param o1
+ * @param o2
+ * @returns {Object}
+ */
 export function extend(o1: Object, o2: Object): Object {
 
     if (o1 == null || o2 == null)
@@ -212,8 +275,14 @@ export function extend(o1: Object, o2: Object): Object {
 }
 
 /**
- * Copies the specified property from the second object into the first object if it exists
- * returns true if the property was found and copied
+ * Copies the specified property from the second object into the first object if it exists.
+ * Returns true if the property was found and copied.
+ * @param property
+ * @param o1
+ * @param o2
+ * @param allowNull
+ * @param allowEmpty
+ * @returns {boolean}
  */
 export function copyProperty(
     /*
@@ -269,27 +338,51 @@ export function copyProperty(
     return copy;
 }
 
+/**
+ * Return whether the parameter is a function or not.
+ * @param functionToCheck
+ * @returns {boolean}
+ */
 export function isFunction(functionToCheck) {
     let getType = {};
     return functionToCheck && getType.toString.call(functionToCheck) === '[object Function]';
 }
 
-//  replaceAll string function, needed since javascript's replace function only replaces the first instance
+/**
+ * Replace all instances within a string.  This is needed since javascript's replace function only replaces the first instance.
+ * @param original
+ * @param search
+ * @param replacement
+ * @returns {string}
+ */
 export function replaceAll(original: string, search: string, replacement: string) {
     return original.split(search).join(replacement);
 }
 
-//  Format an object to html with indentation and spaces
+/**
+ * Format an object to html with indentation and spaces
+ * @param obj
+ * @returns {string}
+ */
 export function htmlify(obj): string {
     return '<pre>' + JSON.stringify(obj, null, 4) + '</pre>';
 }
 
-//  Return whether an object is empty or noe
+/**
+ * Return whether an object is empty or not.
+ * @param obj
+ * @returns {boolean}
+ */
 export function empty(obj: Object): boolean {
     return Object.keys(obj).length == 0;
 }
 
-//  trim a specific string off the start of a string
+/**
+ * Trim a specific string off the start of a string.
+ * @param value
+ * @param start
+ * @returns {string}
+ */
 export function trimStart(value: string, start: string) {
     if (value.length == 0) return value;
 
@@ -302,14 +395,22 @@ export function trimStart(value: string, start: string) {
 }
 
 /**
- * Get the value from a cookie from the raw header string
+ * Get the value from a cookie from the raw header string.
+ * @param headerVal
+ * @param key
+ * @returns {null}
  */
 export function parseCookieValueFromString(headerVal: string, key: string) {
     let result;
     return (result = new RegExp('(?:^|; )' + encodeURIComponent(key) + '=([^;]*)').exec(headerVal)) ? (result[1]) : null;
 }
 
-//  trim a specific string off the end of a string
+/**
+ * Trim a specific string off the end of a string.
+ * @param val
+ * @param end
+ * @returns {string}
+ */
 export function trimEnd(val: string, end: string): string {
 
     if (val.slice(-end.length) === end)
@@ -318,18 +419,33 @@ export function trimEnd(val: string, end: string): string {
         return val;
 }
 
-//  Repeat a string N times
+/**
+ * Repeat a string N times.
+ * @param val
+ * @param n
+ * @returns {string}
+ */
 export function repeat(val: string, n: number): string {
     n = n || 1;
     return Array(n + 1).join(val);
 }
 
-//  Repeat html spaces N times
+/**
+ * Repeat html spaces N times.
+ * @param n
+ * @returns {string|any}
+ */
 export function spaces(n: number): string {
     return this.repeat('&nbsp;', n);
 }
 
-//  merge two object - overwrite existing elements, if specified
+/**
+ * Merge two object - overwrite existing elements, if specified.
+ * @param o1
+ * @param o2
+ * @param overwrite
+ * @returns {any}
+ */
 export function merge(o1: any, o2: any, overwrite: boolean): Object {
 
     if (!o1)
@@ -359,11 +475,21 @@ export function merge(o1: any, o2: any, overwrite: boolean): Object {
     return o;
 }
 
+/**
+ * DEPRECATED - use validator modules.  This does a simple check whether an email is valid.
+ * @param email
+ * @returns {string|boolean}
+ */
 export function validEmail(email: string) {
     return email && email.indexOf('@') > -1 && email.indexOf('.') > -1;
 }
 
-//  Collect missing arguments on a REST request
+/**
+ * Collect missing arguments on a REST request.
+ * @param params
+ * @param requiredParams
+ * @returns {Array}
+ */
 export function missingParams(params: Object, requiredParams: Array<string>): Array<string> {
     let missing = [];
 
@@ -379,7 +505,8 @@ export function missingParams(params: Object, requiredParams: Array<string>): Ar
 
 /**
  *  Generates a GUID string.
- *  example af8a8416-6e18-a307-bd9c-f2c947bbb3aa
+ *  Example af8a8416-6e18-a307-bd9c-f2c947bbb3aa.
+ * @returns {string}
  */
 export function guid() {
     function _p8(s?) {
@@ -389,9 +516,12 @@ export function guid() {
     return _p8() + _p8(true) + _p8(true) + _p8();
 }
 
-//  Return a 32-bit integer hash from a string.  This uses a variation of the murmur3 hash algorithm.  The collision
-//  rate is very small.
-//  Params:  input - the string to hash
+/**
+ * Return a 32-bit integer hash from a string.  This uses a variation of the murmur3 hash algorithm.  The collision
+ * rate is very small.
+ * @param input         The string to hash.
+ * @returns {number}
+ */
 export function hash(input: string): number {
 
     let hash = 0, len: number;
@@ -403,13 +533,21 @@ export function hash(input: string): number {
     return hash;
 }
 
+/**
+ * Set headers to prevent caching on a response.
+ * @param res   The express or restify response object.
+ */
 export function noCache(res: any) {
     res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
     res.header('Expires', '-1');
     res.header('Pragma', 'no-cache');
 }
 
-//  strip the protocol off a URL (https://, ftp://, etc.)
+/**
+ * Strip the protocol off a URL (https://, ftp://, etc.).
+ * @param url
+ * @returns {string}
+ */
 export function stripProtocol(url: string): string {
     let ret = url;
 
@@ -420,9 +558,10 @@ export function stripProtocol(url: string): string {
 }
 
 /**
- * Parses mixed type values into booleans. This is the same function as filter_var in PHP using boolean validation
- * @value  {Boolean}      nullOnFailure = false
- * @return {Boolean|Null}
+ * Parses mixed type values into booleans. This is the same function as filter_var in PHP using boolean validation.
+ * @param value
+ * @param nullOnFailure
+ * @returns {any}
  */
 export function parseBoolean(value, nullOnFailure = false) {
 
@@ -454,7 +593,13 @@ export function parseBoolean(value, nullOnFailure = false) {
     return value;
 }
 
-//  Rename an attribute
+/**
+ * Rename an attribute.
+ * @param obj
+ * @param name
+ * @param replacement
+ * @returns {Object}
+ */
 export function renameAttribute(obj: Object, name: string, replacement: string): Object {
 
     for (let attrib in obj) {

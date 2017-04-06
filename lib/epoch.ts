@@ -1,4 +1,3 @@
-/// <reference path="../typings/moment-timezone/moment-timezone.d.ts" />
 let moment = require("moment-timezone");
 
 /**
@@ -67,7 +66,11 @@ export enum DateIntervals {
     year
 }
 
-//  Return an id from a timezone code, moment timezone name or id.  Return -1 if not found.
+/**
+ * Return an id from a timezone code, moment timezone name or id.  Return -1 if not found.
+ * @param timezone
+ * @returns {number}
+ */
 export function getTimezoneId(timezone: any): number {
 
     if (typeof timezone == 'string') {     // like PST or GMT
@@ -104,7 +107,11 @@ export function getTimezoneId(timezone: any): number {
     }
 }
 
-//  get a timezone object from a code
+/**
+ * Get a timezone object from a code
+ * @param timezone
+ * @returns {Timezone}
+ */
 export function getTimezone(timezone: any) {
     let id = getTimezoneId(timezone);
 
@@ -114,8 +121,12 @@ export function getTimezone(timezone: any) {
     return timezones[0];
 }
 
-//  The current timezone offset in seconds that adjusts for DST.
-export function utcOffset(timezoneId: number) {
+/**
+ * The current timezone offset in seconds that adjusts for DST.
+ * @param timezoneId
+ * @returns {number}
+ */
+export function utcOffset(timezoneId: number): number {
 
     let timezone = timezones[this.getTimezoneId(timezoneId)];
 
@@ -126,11 +137,22 @@ export function utcOffset(timezoneId: number) {
     return -moment.tz.zone(timezone.momentName).offset(new Date().getTime()) * 60;
 }
 
+/**
+ * The current date and time adjusted by the UTC offset passed in.
+ * @param utcOffset     The UTC offset.  This is generally from the timezone of the user.
+ * @returns {Date}
+ */
 export function currentDatetime(utcOffset: number = 0) {
     let date = new Date();
     return new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds() + utcOffset));
 }
 
+/**
+ * Convert a date and time with a UTC offset to UTC.
+ * @param strDate
+ * @param utcOffset
+ * @returns {Date}
+ */
 export function toUTC(strDate: string, utcOffset: number = 0) {
     let date = new Date(Date.parse(strDate));
 
@@ -140,7 +162,12 @@ export function toUTC(strDate: string, utcOffset: number = 0) {
     return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds() + utcOffset + localOffset));
 }
 
-export function currentDate(utcOffset: number = 0) {
+/**
+ * The current date (no time) adjusted by the UTC offset passed in.
+ * @param utcOffset     The UTC offset.  This is generally from the timezone of the user.
+ * @returns {Date}
+ */
+export function currentDate(utcOffset: number = 0): Date {
     let date = new Date();
 
     if (utcOffset == 0) {
@@ -152,10 +179,21 @@ export function currentDate(utcOffset: number = 0) {
     return new Date(Date.UTC(adjustedDate.getUTCFullYear(), adjustedDate.getUTCMonth(), adjustedDate.getUTCDate()));
 }
 
+/**
+ * The current month, like 2017-01-01 (this returns the beginning of the month).
+ * @param utcOffset
+ * @returns {Date}
+ */
 export function currentMonth(utcOffset: number = 0): Date {
     return addMonths(month(currentDate(utcOffset)));
 }
 
+/**
+ * The month code in YYYY-MM format.
+ * @param date
+ * @param utcOffset
+ * @returns {string}
+ */
 export function monthCode(date?: Date, utcOffset?: number): string {
     if (!date)
         date = currentDate(utcOffset);
@@ -163,7 +201,12 @@ export function monthCode(date?: Date, utcOffset?: number): string {
     return date.getUTCFullYear() + '-' + ('0' + date.getUTCMonth() + 1).slice(-2);
 }
 
-//  Format a date into yyyy-mm-dd hh:mm:ss.  If the date has no epoch component, return in the format yyyy-mm-dd
+/**
+ * Format a date into yyyy-mm-dd hh:mm:ss.  If the date has no epoch component, return in the format yyyy-mm-dd
+ * @param date
+ * @param includeTime   Whether to tack on the time string to the result.
+ * @returns {string}
+ */
 export function dateToString(date: Date, includeTime: boolean = true): string {
     let day = date.getUTCDate();
     let month = date.getUTCMonth() + 1;
@@ -179,7 +222,12 @@ export function dateToString(date: Date, includeTime: boolean = true): string {
     return ret;
 }
 
-//  Add a number of minutes to a date.  The base date defaults to the epoch start.  The result is to the minute.
+/**
+ * Add a number of minutes to a date.  The base date defaults to the epoch start.  The result is to the minute.
+ * @param minutes
+ * @param date
+ * @returns {Date}
+ */
 export function addMinutes(minutes: number, date?: Date) {
 
     if (!date) date = start();
@@ -187,7 +235,12 @@ export function addMinutes(minutes: number, date?: Date) {
     return new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), minutes * 60));
 }
 
-//  Add a number of hours to a date.  The base date defaults to the epoch start.  The result is to the hour.
+/**
+ * Add a number of hours to a date.  The base date defaults to the epoch start.  The result is to the hour.
+ * @param hours
+ * @param date
+ * @returns {Date}
+ */
 export function addHours(hours: number, date?: Date) {
 
     if (!date) date = start();
@@ -195,7 +248,12 @@ export function addHours(hours: number, date?: Date) {
     return new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), 0, hours * 3600));
 }
 
-//  Add a number of days to a date.  The base date defaults to the epoch start.
+/**
+ * Add a number of days to a date.  The base date defaults to the epoch start.
+ * @param days
+ * @param date
+ * @returns {Date}
+ */
 export function addDays(days: number, date?: Date) {
 
     if (!date) date = start();
@@ -203,7 +261,12 @@ export function addDays(days: number, date?: Date) {
     return new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate() + days));
 }
 
-//  Add a number of months to a date.  The base date defaults to the epoch start.
+/**
+ * Add a number of months to a date.  The base date defaults to the epoch start.
+ * @param months
+ * @param date
+ * @returns {Date}
+ */
 export function addMonths(months: number, date?: Date) {
 
     if (!date) date = start();
@@ -211,7 +274,12 @@ export function addMonths(months: number, date?: Date) {
     return new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth() + months, date.getUTCDate()));
 }
 
-//  Add a number of years to a date.  The base date defaults to the epoch start.
+/**
+ * Add a number of years to a date.  The base date defaults to the epoch start.
+ * @param years
+ * @param date
+ * @returns {Date}
+ */
 export function addYears(years: number, date?: Date) {
 
     if (!date) date = start();
@@ -219,14 +287,22 @@ export function addYears(years: number, date?: Date) {
     return new Date(Date.UTC(date.getUTCFullYear() + years, date.getUTCMonth(), date.getUTCDate()));
 }
 
-//  Add a number of seconds to a date.  The base date defaults to the epoch start.
+/**
+ * Add a number of seconds to a date.  The base date defaults to the epoch start.
+ * @param date
+ * @returns {Date}
+ */
 export function startOfDate(date?: Date) {
     if (!date) date = start();
     return new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), 0, 0, 0));
 }
 
-
-//  Add a number of seconds to a date.  The base date defaults to the epoch start.
+/**
+ * Add a number of seconds to a date.  The base date defaults to the epoch start.
+ * @param seconds
+ * @param date
+ * @returns {Date}
+ */
 export function addSeconds(seconds: number, date?: Date) {
 
     if (!date) date = start();
@@ -234,8 +310,13 @@ export function addSeconds(seconds: number, date?: Date) {
     return new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds() + seconds));
 }
 
-//  Return the difference in intervals between two dates.  If the second date is not passed in, the start date
-//  defaults to 1999-01-01.
+/**
+ * Return the difference in intervals between two dates.  If the second date is not passed in, the start date defaults to 1999-01-01.
+ * @param interval
+ * @param date1
+ * @param date2
+ * @returns {number}
+ */
 export function diff(interval: DateIntervals, date1: Date, date2?: Date): number {
 
     if (!date2) {
@@ -279,12 +360,19 @@ export function diff(interval: DateIntervals, date1: Date, date2?: Date): number
  *
  */
 
-//  ALL epoch intervals (except year) are from 1999-01-01
+/**
+ * ALL epoch intervals (except year) are from 1999-01-01
+ * @returns {Date}
+ */
 export function start(): Date {
     return new Date(Date.UTC(1999, 0, 1));
 }
 
-//  Return milliseconds from 1999-01-01
+/**
+ * Return milliseconds from 1999-01-01.
+ * @param date
+ * @returns {number}
+ */
 export function millisecond(date?: Date) {
 
     if (!date)
@@ -294,7 +382,11 @@ export function millisecond(date?: Date) {
     return msFromEpoch - 915148800000;   // convert to utc milliseconds from 1999-01-01
 }
 
-//  Return seconds from 1999-01-01
+/**
+ * Return seconds from 1999-01-01.
+ * @param date
+ * @returns {number}
+ */
 export function second(date?: Date) {
 
     if (!date)
@@ -304,7 +396,11 @@ export function second(date?: Date) {
     return Math.round(secondsFromEpoch) - 915148800;   // convert to utc seconds from 1999-01-01
 }
 
-//  Return minutes from 1999-01-01
+/**
+ * Return minutes from 1999-01-01.
+ * @param date
+ * @returns {number}
+ */
 export function minute(date?: Date) {
 
     if (!date)
@@ -319,7 +415,11 @@ export function minute(date?: Date) {
     return Math.round((seconds2 - seconds1) / 60);
 }
 
-//  Return hours from 1999-01-01
+/**
+ * Return hours from 1999-01-01.
+ * @param date
+ * @returns {number}
+ */
 export function hour(date?: Date) {
 
     if (!date)
@@ -334,7 +434,11 @@ export function hour(date?: Date) {
     return Math.round((seconds2 - seconds1) / 3600);
 }
 
-//  Return days from 1999-01-01
+/**
+ * Return days from 1999-01-01.
+ * @param date
+ * @returns {number}
+ */
 export function day(date?: Date) {
 
     if (!date)
@@ -349,7 +453,11 @@ export function day(date?: Date) {
     return Math.floor((seconds2 - seconds1) / 3600 / 24);
 }
 
-//  Return weeks from 1999-01-01
+/**
+ * Return weeks from 1999-01-01.
+ * @param date
+ * @returns {number}
+ */
 export function week(date?: Date) {
 
     if (!date)
@@ -361,7 +469,11 @@ export function week(date?: Date) {
     return Math.floor((seconds2 - seconds1) / 3600 / 24 / 7);
 }
 
-//  Return months from 1999-01-01
+/**
+ * Return months from 1999-01-01.
+ * @param date
+ * @returns {number}
+ */
 export function month(date?: Date) {
 
     if (!date)
@@ -371,7 +483,11 @@ export function month(date?: Date) {
     return (date.getUTCFullYear() - date1.getUTCFullYear()) * 12 + (date.getUTCMonth() - date1.getUTCMonth());
 }
 
-//  Return quarters from 1999-01-01
+/**
+ * Return quarters from 1999-01-01.
+ * @param date
+ * @returns {number}
+ */
 export function quarter(date?: Date) {
 
     if (!date)
@@ -382,4 +498,3 @@ export function quarter(date?: Date) {
     let q2 = Math.floor(date.getMonth() / 4);
     return (date.getUTCFullYear() - date1.getUTCFullYear()) * 4 + (q2 - q1);
 }
-

@@ -1,17 +1,23 @@
-/// <reference path="../typings/node/node.d.ts" />
-
 import utils = require('./index');
 
 /*
  Common IP functions
  */
 
-//  Return whether the current request is from the local server.
+/**
+ * Return whether the current request is from the local server.
+ * @param req
+ * @returns {boolean}
+ */
 export function localHost(req): boolean {
     return req.connection.remoteAddress.substring(0, 8) == "127.0.0." || req.connection.remoteAddress == "::1";
 }
 
-//  Whether an IP address is IPV6.
+/**
+ * Whether an IP address is IPV6.
+ * @param address
+ * @returns {boolean}
+ */
 export function isIPV6(address: string): boolean {
 
     if (!address) { return false; }
@@ -19,7 +25,11 @@ export function isIPV6(address: string): boolean {
     return typeof address == 'object' || address.indexOf(':') > -1;
 }
 
-//  Return the I.P. address of the request (checking for proxy server forwarding).
+/**
+ * Return the I.P. address of the request (checking for proxy server forwarding).
+ * @param req
+ * @returns {any}
+ */
 export function remoteAddress(req): string {
 
     //   The X-Forwarded-For header is used to identify the originating IP address when a hit is passed via a proxy server.
@@ -85,14 +95,23 @@ export function remoteAddress(req): string {
     }
 }
 
+/**
+ * Return whether the network address is a loopback address, like 127.0.0.1.
+ * @param addr
+ * @returns {boolean}
+ */
 export function isLoopback(addr) {
     return /^127\.0\.0\.1/.test(addr)
         || /^fe80::1/.test(addr)
         || /^::1/.test(addr);
 }
 
-//  Return a 32-bit integer hash from an IPv6 address.  This uses a variation of the murmur3 hash algorithm.  The collision
-//  rate is small, roughly one in 100,000,000.
+/**
+ * Return a 32-bit integer hash from an IPv6 address.  This uses a variation of the murmur3 hash algorithm.  The collision
+ * rate is small, roughly one in 100,000,000.
+ * @param ip
+ * @returns {number}
+ */
 export function hashIPV6(ip: string): number {
     let hash = 0, len: number;
 
@@ -103,7 +122,11 @@ export function hashIPV6(ip: string): number {
     return hash;
 }
 
-//  Convert an IP address to a shardable number.
+/**
+ * Convert an IP address to a shardable number.
+ * @param address
+ * @returns {number}
+ */
 export function hash(address: string): number {
 
     if (isIPV6(address)) {
@@ -124,7 +147,12 @@ export function hash(address: string): number {
     }
 }
 
-//  Convert an IP address to a number.
+/**
+ * Convert an IP address to a number.
+ * @param address
+ * @param reverse
+ * @returns {number}
+ */
 export function toNumber(address: string, reverse: boolean = false): number {
 
     if (isIPV6(address)) {
@@ -152,10 +180,14 @@ export function toNumber(address: string, reverse: boolean = false): number {
     }
 }
 
-//  Format an IP address to a storable format.
-
-//  If IPv4: the ip address converted to a 32-bit integer
-//  If IPv6: the ip address converted to a 16 byte binary
+/**
+ * Format an IP address to a storable format.
+ *
+ * If IPv4: the ip address converted to a 32-bit integer
+ * If IPv6: the ip address converted to a 16 byte binary
+ * @param address
+ * @returns {any}
+ */
 export function compress(address: string): any {
 
     if (!isIPV6(address)) {
@@ -189,10 +221,14 @@ export function compress(address: string): any {
     }
 }
 
-//  Format an IP address to a storable format.
-
-//  If IPv4: the ip address converted to a 32-bit integer
-//  If IPv6: the ip address converted to a 16 byte binary
+/**
+ * Format an IP address to a storable format.
+ *
+ * If IPv4: the ip address converted to a 32-bit integer
+ * If IPv6: the ip address converted to a 16 byte binary
+ * @param address
+ * @returns {string}
+ */
 export function decompress(address: any): any {
 
     if (typeof address == 'number') {
@@ -221,7 +257,11 @@ export function decompress(address: any): any {
     }
 }
 
-//  Convert an IP address to a 32-bit number.
+/**
+ * Convert an IP address to a 32-bit number.
+ * @param address
+ * @returns {number}
+ */
 export function toNumber32(address: string): number {
 
     if (isIPV6(address)) {
@@ -247,7 +287,11 @@ export function toNumber32(address: string): number {
     }
 }
 
-//  Convert an IP number (as created by the toNumber function) to an IP address
+/**
+ * Convert an IP number (as created by the toNumber function) to an IP address.
+ * @param ipNumber
+ * @returns {string}
+ */
 export function fromNumber(ipNumber: number): string {
 
     let addr = utils.toBytes(ipNumber);
@@ -258,7 +302,11 @@ export function fromNumber(ipNumber: number): string {
         addr[0];
 }
 
-//  Convert an IP address to a number.
+/**
+ * Convert an IP address to a number.
+ * @param address
+ * @returns {number}
+ */
 export function toNumberIPV6(address: string): number {
     return hashIPV6(address);
 }
