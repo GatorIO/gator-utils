@@ -17,8 +17,8 @@ let iconv = require("iconv-lite");
  * @param bytes         The length of the string to create.
  * @returns {string}
  */
-export function superRandom(bytes: number = 20) {
-    return crypto.randomBytes(bytes).toString('base64');
+export function superRandom(numBytes: number = 20) {
+    return crypto.randomBytes(numBytes).toString('base64');
 }
 
 /**
