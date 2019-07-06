@@ -19,6 +19,7 @@ build/Release
 
 obj/
 bin/
+*.js
 *.suo
 *.js.map
 

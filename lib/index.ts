@@ -5,6 +5,8 @@ export let epoch = require('./epoch');
 export let config = require('./config');
 import crypto = require('crypto');
 import cloneLib = require('clone');
+import http = require('http');
+import https = require('https');
 
 /*
  Common utility functions
@@ -13,8 +15,60 @@ import cloneLib = require('clone');
 let iconv = require("iconv-lite");
 
 /**
+ * Escape all characters not included in SingleStringCharacters
+ * http://www.ecma-international.org/ecma-262/5.1/#sec-7.8.4
+ *
+ * This is used to format strings with special characters into parsable JSON.
+ * @param {string} str
+ * @returns {string}
+ * @constructor
+ */
+export function JSONEscape(str: string): string {
+    return ('' + str).replace(/["\\\n\r\t\b\f\u2028\u2029]/g, function (character) {
+        // Escape all characters not included in SingleStringCharacters and
+        // Escape all characters not included in SingleStringCharacters and
+        // http://www.ecma-international.org/ecma-262/5.1/#sec-7.8.4
+        switch (character) {
+            case '"':
+            case '\\':
+                return '\\' + character;
+          // characters need to be escaped:
+            case '\n':
+                return '\\n';
+            case '\t':
+                return '\\t';
+            case '\b':
+                return '\\b';
+            case '\f':
+                return '\\f';
+            case '\r':
+                return '\\r';
+            case '\u2028':
+                return '\\u2028';
+            case '\u2029':
+                return '\\u2029'
+        }
+    })
+}
+
+/**
+ * Parse string into JSON, but trap errors if the JSON is not valid.  A common cause of parse
+ * failures are special characters in values.  Use JSONEscape to handle them.
+ * @param {string} str
+ * @returns {Object}    The JSON object, or null if the string is not valid JSON.
+ * @constructor
+ */
+export function JSONSafeParse(str: string): any {
+    try {
+        return JSON.parse(str);
+    } catch(err) {
+        return null;
+    }
+}
+
+/**
  * Create a string of random base64 characters.
- * @param bytes         The length of the string to create.
+ * @param numBytes         The length of the string to create.
  * @returns {string}
  */
 export function superRandom(numBytes: number = 20) {
@@ -141,46 +195,46 @@ export function uuid(len?: number, radix?: number) {
 /**
  * This base62 is only safe for decoding to integers.
  * @param a
- * @returns {any}
+ * @returns {number}
  */
 export function base62decode(a: string): number {
 
     let b, c, d;
 
     for (
-        b = c = ( // 'false - 1' will return '-1' and 'true - 1' will return '0'
-            a === (/\W|_|^$/.test(a += "") || a) // tests if 'a' is a properly base62-encoded string and coerces it to one
-                ? 1 : 0) - 1; // so, 'b' and 'c' are initialized with either '-1' or '0'
- 
-        d = a.charCodeAt(c++); // if 'c' equals '-1', 'd' is 'NaN' which breaks the loop execution
-        )
+      b = c = ( // 'false - 1' will return '-1' and 'true - 1' will return '0'
+        a === (/\W|_|^$/.test(a += "") || a) // tests if 'a' is a properly base62-encoded string and coerces it to one
+          ? 1 : 0) - 1; // so, 'b' and 'c' are initialized with either '-1' or '0'
+
+      d = a.charCodeAt(c++); // if 'c' equals '-1', 'd' is 'NaN' which breaks the loop execution
+    )
 
         b = b * 62 + d - [, 48, 29, 87][d >> 5]; // See comments : https://gist.github.com/1170594#gistcomment-48129
- 
+
     return b; // positive base10 integer or '-1' if 'a' is not a base62 encoded string
 }
 
 /**
  * This base62 is only safe for encoding integers
  * @param a
- * @returns {any}
+ * @returns {string}
  */
 export function base62encode(a): string {
 
     let b, c;
 
     for (
-        a = a !== +a || a % 1 ? -1 : a, b = ""; // if not a base10 integer, 'a' will be '-1'
-        // for example, '.5 % 1 == .5' but '1 % 1 == 0'
-        a >= 0; // also prevents the user to use negative base10 integers
-        a = Math.floor(a / 62) || -1 // using a bitwise hack here will fail with great numbers
-        )
- 
-        // a%62 -> 0-61
-        // 0-9   | 36-61 | 10-35
-        // 48-57 | 65-90 | 97-121
-        // 0-9   | A-Z   | a-z
- 
+      a = a !== +a || a % 1 ? -1 : a, b = ""; // if not a base10 integer, 'a' will be '-1'
+      // for example, '.5 % 1 == .5' but '1 % 1 == 0'
+      a >= 0; // also prevents the user to use negative base10 integers
+      a = Math.floor(a / 62) || -1 // using a bitwise hack here will fail with great numbers
+    )
+
+      // a%62 -> 0-61
+      // 0-9   | 36-61 | 10-35
+      // 48-57 | 65-90 | 97-121
+      // 0-9   | A-Z   | a-z
+
         b = String.fromCharCode(((c = a % 62) > 9 ? c > 35 ? 29 : 87 : 48) + c) + b;
 
     return b; // will return either an empty or a base62-encoded string
@@ -217,9 +271,9 @@ export function padLeft(value: any, padChar: string, padCount: number) {
  * Decode a URL.
  * @param str
  * @param charset
- * @returns {any}
+ * @returns {string}
  */
-export function urlDecode(str, charset) {
+export function urlDecode(str, charset): string {
     if (isUTF8(charset)) {
 
         try {
@@ -285,26 +339,26 @@ export function extend(o1: Object, o2: Object): Object {
  * @returns {boolean}
  */
 export function copyProperty(
-    /*
-     * The property you are copying
-     */
-    property: string,
-    /*
-     * The object you are copying to
-     */
-    o1: Object,
-    /*
-     * The object you are copying from
-     */
-    o2: Object,
-    /*
-     * Allow the copying of null values
-     */
-    allowNull: boolean = false,
-    /*
-     * Allow the copying of empty values
-     */
-    allowEmpty: boolean = false): boolean {
+  /*
+   * The property you are copying
+   */
+  property: string,
+  /*
+   * The object you are copying to
+   */
+  o1: Object,
+  /*
+   * The object you are copying from
+   */
+  o2: Object,
+  /*
+   * Allow the copying of null values
+   */
+  allowNull: boolean = false,
+  /*
+   * Allow the copying of empty values
+   */
+  allowEmpty: boolean = false): boolean {
 
     if (o1 == null || o2 == null)
         throw new Error('both objects must have a value');
@@ -433,7 +487,7 @@ export function repeat(val: string, n: number): string {
 /**
  * Repeat html spaces N times.
  * @param n
- * @returns {string|any}
+ * @returns {string}
  */
 export function spaces(n: number): string {
     return this.repeat('&nbsp;', n);
@@ -444,7 +498,7 @@ export function spaces(n: number): string {
  * @param o1
  * @param o2
  * @param overwrite
- * @returns {any}
+ * @returns {Object}
  */
 export function merge(o1: any, o2: any, overwrite: boolean): Object {
 
@@ -561,9 +615,9 @@ export function stripProtocol(url: string): string {
  * Parses mixed type values into booleans. This is the same function as filter_var in PHP using boolean validation.
  * @param value
  * @param nullOnFailure
- * @returns {any}
+ * @returns {boolean}
  */
-export function parseBoolean(value, nullOnFailure = false) {
+export function parseBoolean(value, nullOnFailure = false): boolean {
 
     switch(value){
         case true:
@@ -621,4 +675,56 @@ export function renameAttribute(obj: Object, name: string, replacement: string):
     }
 
     return obj;
+}
+
+/**
+ * Get the contents of a URL.
+ * @param url
+ * @param callback
+ */
+export function getUrlText(url, callback) {
+    let lib: any = http;
+
+    if (url.indexOf('https:') == 0)
+        lib = https;
+
+    lib.get(url, function(res) {
+
+        // explicitly treat incoming data as utf8 (avoids issues with multi-byte chars)
+        res.setEncoding('utf8');
+
+        // incrementally capture the incoming response body
+        let body = '';
+
+        res.on('data', function(d) {
+            body += d;
+        });
+
+        // do whatever we want with the response once it's done
+        res.on('end', function() {
+            callback(null, body);
+        });
+    }).on('error', function(err) {
+        callback(err);
+    });
+}
+
+/**
+ * Append a query string parameter onto an URL considering whether it should be prefixed with & or ?.  The
+ * value will be encoded.
+ * @param {string} url
+ * @param {string} name
+ * @param {string} value
+ * @returns {string}
+ */
+export function appendQueryString(url: string, name: string, value: string): string {
+    let result = url;
+
+    if (result.indexOf('?') > 0) {
+        result += '&';
+    } else {
+        result += '?';
+    }
+
+    return result += name + '=' + encodeURIComponent(value);
 }

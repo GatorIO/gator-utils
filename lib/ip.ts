@@ -10,6 +10,11 @@ import utils = require('./index');
  * @returns {boolean}
  */
 export function localHost(req): boolean {
+
+    //  the connection can be destroyed mid-processing, so test for existence
+    if (!req || !req.connection || !req.connection.remoteAddress) {
+        return false;
+    }
     return req.connection.remoteAddress.substring(0, 8) == "127.0.0." || req.connection.remoteAddress == "::1";
 }
 
@@ -28,7 +33,7 @@ export function isIPV6(address: string): boolean {
 /**
  * Return the I.P. address of the request (checking for proxy server forwarding).
  * @param req
- * @returns {any}
+ * @returns {string}
  */
 export function remoteAddress(req): string {
 
@@ -87,7 +92,7 @@ export function remoteAddress(req): string {
         let xf: string = req.connection.remoteAddress;
 
         //  a tiny % of hits have an unknown ip address, so return a default address
-        if (xf.substring(0, 7) == "unknown") {
+        if (!xf || xf.substring(0, 7) == "unknown") {
             return "127.0.0.1";
         }
 
@@ -102,8 +107,8 @@ export function remoteAddress(req): string {
  */
 export function isLoopback(addr) {
     return /^127\.0\.0\.1/.test(addr)
-        || /^fe80::1/.test(addr)
-        || /^::1/.test(addr);
+      || /^fe80::1/.test(addr)
+      || /^::1/.test(addr);
 }
 
 /**
@@ -141,9 +146,9 @@ export function hash(address: string): number {
 
         //  reverse the order of bytes of the IP address for better shard distribution
         return Number(_ip[0]) * 16777216 +
-            Number(_ip[1]) * 65536 +
-            Number(_ip[2]) * 256 +
-            Number(_ip[3]);
+          Number(_ip[1]) * 65536 +
+          Number(_ip[2]) * 256 +
+          Number(_ip[3]);
     }
 }
 
@@ -168,14 +173,14 @@ export function toNumber(address: string, reverse: boolean = false): number {
         //  create a number from the octets
         if (reverse)
             return Number(_ip[3]) * 16777216 +
-                Number(_ip[2]) * 65536 +
-                Number(_ip[1]) * 256 +
-                Number(_ip[0]);
+              Number(_ip[2]) * 65536 +
+              Number(_ip[1]) * 256 +
+              Number(_ip[0]);
         else
             return Number(_ip[0]) * 16777216 +
-                Number(_ip[1]) * 65536 +
-                Number(_ip[2]) * 256 +
-                Number(_ip[3]);
+              Number(_ip[1]) * 65536 +
+              Number(_ip[2]) * 256 +
+              Number(_ip[3]);
 
     }
 }
@@ -186,7 +191,6 @@ export function toNumber(address: string, reverse: boolean = false): number {
  * If IPv4: the ip address converted to a 32-bit integer
  * If IPv6: the ip address converted to a 16 byte binary
  * @param address
- * @returns {any}
  */
 export function compress(address: string): any {
 
@@ -196,8 +200,9 @@ export function compress(address: string): any {
 
         let parts = address.split(':');
         let bytes = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        let i;
 
-        for (var i = 0; i < parts.length; i++) {
+        for (i = 0; i < parts.length; i++) {
 
             //  When the :: is hit, start filling from the end of the array
             if (parts[i] == '') {
@@ -235,9 +240,9 @@ export function decompress(address: any): any {
         let addr = utils.toBytes(address);
 
         return addr[3] + '.' +
-            addr[2] + '.' +
-            addr[1] + '.' +
-            addr[0];
+          addr[2] + '.' +
+          addr[1] + '.' +
+          addr[0];
     } else {
 
         let ret: string = '';
@@ -276,9 +281,9 @@ export function toNumber32(address: string): number {
 
         //  create a number from the octets
         let num: number = Number(_ip[0]) * 16777216 +
-            Number(_ip[1]) * 65536 +
-            Number(_ip[2]) * 256 +
-            Number(_ip[3]);
+          Number(_ip[1]) * 65536 +
+          Number(_ip[2]) * 256 +
+          Number(_ip[3]);
 
         if (num >= 2147483648)
             num -= 4294967296;
@@ -297,9 +302,9 @@ export function fromNumber(ipNumber: number): string {
     let addr = utils.toBytes(ipNumber);
 
     return addr[3] + '.' +
-        addr[2] + '.' +
-        addr[1] + '.' +
-        addr[0];
+      addr[2] + '.' +
+      addr[1] + '.' +
+      addr[0];
 }
 
 /**
@@ -309,4 +314,23 @@ export function fromNumber(ipNumber: number): string {
  */
 export function toNumberIPV6(address: string): number {
     return hashIPV6(address);
+}
+
+/**
+ * Return whether an I.P. address is in a private range.
+ * @param address
+ * @returns {boolean}
+ */
+export function isPrivate(address): boolean {
+    return /^(::f{4}:)?10\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})$/i
+        .test(address) ||
+      /^(::f{4}:)?192\.168\.([0-9]{1,3})\.([0-9]{1,3})$/i.test(address) ||
+      /^(::f{4}:)?172\.(1[6-9]|2\d|30|31)\.([0-9]{1,3})\.([0-9]{1,3})$/i
+        .test(address) ||
+      /^(::f{4}:)?127\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})$/i.test(address) ||
+      /^(::f{4}:)?169\.254\.([0-9]{1,3})\.([0-9]{1,3})$/i.test(address) ||
+      /^f[cd][0-9a-f]{2}:/i.test(address) ||
+      /^fe80:/i.test(address) ||
+      /^::1$/.test(address) ||
+      /^::$/.test(address);
 }

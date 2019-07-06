@@ -14,20 +14,24 @@
     ],
     "types": "./gator-utils.d.ts",
     "engines": {
-        "node": ">=4.2.0"
+        "node": ">=8.7.0"
     },
     "repository": {
         "type": "git",
         "url": "https://github.com/GatorIO/gator-utils.git"
     },
     "dependencies": {
-        "@types/node": "^6.0.68",
+        "@types/node": "^10.14.12",
         "@types/clone": "^0.1.30",
-        "clone": "^2.1.1",
-        "iconv-lite": "^0.4.15",
-        "moment": "^2.18.1",
-        "@types/moment-timezone": "^0.2.34",
-        "moment-timezone": "^0.5.13"
+        "clone": "^2.1.2",
+        "iconv-lite": "^0.5.0",
+        "moment": "^2.24.0",
+        "@types/moment-timezone": "^0.5.12",
+        "moment-timezone": "^0.5.25",
+        "typescript": "^3.5.2"
     },
-    "license" : "MIT"
+    "license" : "MIT",
+    "scripts": {
+        "install": "tsc"
+    }
 }

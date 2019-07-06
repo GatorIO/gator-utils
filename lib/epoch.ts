@@ -46,7 +46,7 @@ timezones[26] = { code: 'CTT', momentName: 'Asia/Taipei', name: 'China Taiwan Ti
 timezones[27] = { code: 'JST', momentName: 'Asia/Tokyo', name: 'Japan Time (JST)' };
 timezones[28] = { code: 'ACT', momentName: 'Australia/Adelaide', name: 'Australia Central Time (ACT)' };
 timezones[29] = { code: 'AET', momentName: 'Australia/Sydney', name: 'Australia Eastern Time (AET)' };
-timezones[30] = { code: 'AWT', momentName: 'Australia/Perth', name: 'Australia Western Time (AET)' };
+timezones[30] = { code: 'AWT', momentName: 'Australia/Perth', name: 'Australia Western Time (AWT)' };
 timezones[31] = { code: 'NST', momentName: 'Pacific/Auckland', name: 'New Zealand Time (NST)' };
 timezones[32] = { code: 'PXT', momentName: 'America/Hermosillo', name: 'Mexico/Pacific Time (PXT)' };
 timezones[33] = { code: 'IST', momentName: 'Israel', name: 'Israel Time (IST)' };
@@ -67,7 +67,8 @@ export enum DateIntervals {
 }
 
 /**
- * Return an id from a timezone code, moment timezone name or id.  Return -1 if not found.
+ * Return an id from a timezone code, moment timezone name or id.  Return null if not found.  This routine attempts
+ * to map a timezone from various formats from different systems.
  * @param timezone
  * @returns {number}
  */
@@ -75,34 +76,73 @@ export function getTimezoneId(timezone: any): number {
 
     if (typeof timezone == 'string') {     // like PST or GMT
 
-        timezone = timezone.toUpperCase();
+        let zone = timezone, zoneAbbr = 'UTC';
 
+        //  Sometimes the format passed in is a hybrid of GMT offset and moment.js name.  If so, strip out the
+        //  offset part of the timezone.  For example: (GMT+01:00) Europe/Paris
+        if (zone.substr(0, 4) == '(GMT') {
+            zone = zone.substr(zone.indexOf(' ') + 1);
+        }
+
+        //  see if this is a moment name and get the abbreviation
+        if (moment.tz.zone(zone)) {
+            zoneAbbr = moment.tz([2017, 0], zone).zoneAbbr();
+        } else if (moment.tz.zone(zone.replace('-', '/'))) {
+            zoneAbbr = moment.tz([2017, 0], zone.replace('-', '/')).zoneAbbr();
+        } else if (moment.tz.zone(zone.replace('_', '/'))) {
+            zoneAbbr = moment.tz([2017, 0], zone.replace('_', '/')).zoneAbbr();
+        }
+
+        if (zoneAbbr != 'UTC')
+            zone = zoneAbbr;
+
+        zone = zone.toUpperCase();
+
+        //  daylight savings time zones to standard
+        switch (zone) {
+            case 'EDT':
+                return 8;
+            case 'PDT':
+                return 4;
+            case 'CDT':
+                return 7;
+            case 'MDT':
+                return 6;
+            case 'IDT':
+                return 33;
+            case 'CET':
+                return 16;
+            case 'AWST':
+                return 30;
+            case 'SST':
+                return 1;
+            case 'AKST':
+                return 3;
+        }
+
+        //  try to find a matching zone
         for (let key in timezones) {
 
             if (timezones.hasOwnProperty(key)) {
                 let tz = timezones[key];
 
-                if (tz.code.toUpperCase() == timezone.toUpperCase())
-                    return +key;
-
-                if (tz.momentName && tz.momentName.toUpperCase() == timezone.toUpperCase())
+                if (tz.code.toUpperCase() == zone)
                     return +key;
             }
         }
 
         //  since nothing was found, try to guess common time zone
-        if (timezone.indexOf('EASTERN TIME') > -1)
+        if (zone.indexOf('EASTERN TIME') > -1)
             return 8;
-        if (timezone.indexOf('CENTRAL TIME') > -1)
+        if (zone.indexOf('CENTRAL TIME') > -1)
             return 7;
-        if (timezone.indexOf('MOUNTAIN TIME') > -1)
+        if (zone.indexOf('MOUNTAIN TIME') > -1)
             return 6;
-        if (timezone.indexOf('PACIFIC TIME') > -1)
+        if (zone.indexOf('PACIFIC TIME') > -1)
             return 4;
 
-        return -1;      // not found
-    }
-    else {
+        return 0;      // not found - return UTC
+    } else {
         return timezone;
     }
 }
@@ -134,7 +174,7 @@ export function utcOffset(timezoneId: number): number {
         return 0;
 
     //  moment timezone uses opposite direction for offset
-    return -moment.tz.zone(timezone.momentName).offset(new Date().getTime()) * 60;
+    return -moment.tz.zone(timezone.momentName).utcOffset(new Date().getTime()) * 60;
 }
 
 /**
@@ -259,6 +299,19 @@ export function addDays(days: number, date?: Date) {
     if (!date) date = start();
 
     return new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate() + days));
+}
+
+/**
+ * Add a number of weeks to a date.
+ * @param {number} weeks
+ * @param {Date} date
+ * @returns {Date}
+ */
+export function addWeeks(weeks: number, date?: Date) {
+
+    if (!date) date = start();
+
+    return addDays(weeks * 7 - 5);
 }
 
 /**
