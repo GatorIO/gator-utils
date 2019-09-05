@@ -21,14 +21,14 @@
         "url": "https://github.com/GatorIO/gator-utils.git"
     },
     "dependencies": {
-        "@types/node": "^10.14.12",
+        "@types/node": "^10.14.17",
         "@types/clone": "^0.1.30",
         "clone": "^2.1.2",
         "iconv-lite": "^0.5.0",
         "moment": "^2.24.0",
         "@types/moment-timezone": "^0.5.12",
-        "moment-timezone": "^0.5.25",
-        "typescript": "^3.5.2"
+        "moment-timezone": "^0.5.26",
+        "typescript": "^3.6.2"
     },
     "license" : "MIT",
     "scripts": {
