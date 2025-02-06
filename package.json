@@ -1,7 +1,7 @@
 {
     "name": "gator-utils",
     "description": "Utility functions",
-    "version": "2.0.2",
+    "version": "2.0.4",
     "author": {
         "name": "GatorIO"
     },
@@ -21,8 +21,8 @@
         "url": "https://github.com/GatorIO/gator-utils.git"
     },
     "devDependencies": {
-        "@types/node": "^10.14.17",
-        "@types/clone": "^0.1.30"
+        "@types/clone": "^0.1.30",
+        "@types/node": "^10.14.17"
     },
     "dependencies": {
         "clone": "^2.1.2",
@@ -31,7 +31,7 @@
         "moment-timezone": "^0.5.28",
         "typescript": "4.9.5"
     },
-    "license" : "MIT",
+    "license": "MIT",
     "scripts": {
         "install": "tsc"
     }
