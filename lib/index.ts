@@ -294,7 +294,7 @@ export function urlDecode(str, charset): string {
             i++;
         }
     }
-    let buf = new Buffer(bytes);
+    let buf = Buffer.from(bytes);
     return iconv.decode(buf, charset);
 }
 
@@ -680,32 +680,30 @@ export function renameAttribute(obj: Object, name: string, replacement: string):
 /**
  * Get the contents of a URL.
  * @param url
- * @param callback
+ * @returns {Promise<string>}
  */
-export function getUrlText(url, callback) {
-    let lib: any = http;
+export function getUrlText(url: string): Promise<string> {
+    const lib = url.indexOf('https:') == 0 ? https : http;
 
-    if (url.indexOf('https:') == 0)
-        lib = https;
+    return new Promise<string>((resolve, reject) => {
+        lib.get(url, function(res) {
 
-    lib.get(url, function(res) {
+            // explicitly treat incoming data as utf8 (avoids issues with multi-byte chars)
+            res.setEncoding('utf8');
 
-        // explicitly treat incoming data as utf8 (avoids issues with multi-byte chars)
-        res.setEncoding('utf8');
+            // incrementally capture the incoming response body
+            let body = '';
 
-        // incrementally capture the incoming response body
-        let body = '';
+            res.on('data', function(d) {
+                body += d;
+            });
 
-        res.on('data', function(d) {
-            body += d;
-        });
+            res.on('end', function() {
+                resolve(body);
+            });
 
-        // do whatever we want with the response once it's done
-        res.on('end', function() {
-            callback(null, body);
-        });
-    }).on('error', function(err) {
-        callback(err);
+            res.on('error', reject);
+        }).on('error', reject);
     });
 }
 

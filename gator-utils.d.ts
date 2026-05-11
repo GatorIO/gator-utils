@@ -33,7 +33,7 @@ declare module 'gator-utils' {
     export function stripProtocol(url: string): string;
     export function parseBoolean(value, nullOnFailure?: boolean);
     export function renameAttribute(obj: Object, name: string, replacement: string): Object;
-    export function getUrlText(url, callback);
+    export function getUrlText(url: string): Promise<string>;
     export function appendQueryString(url: string, name: string, value: string): string;
 
     export module config {

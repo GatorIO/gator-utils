@@ -1,9 +1,15 @@
 {
     "compilerOptions": {
         "module": "commonjs",
+        "moduleResolution": "node",
+        "target": "ES2023",
+        "lib": ["ES2023"],
         "sourceMap": true,
-        "target": "ES6",
-        "removeComments": true
+        "declaration": false,
+        "removeComments": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true
     },
     "exclude": [
         "node_modules"
