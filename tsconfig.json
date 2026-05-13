@@ -9,9 +9,8 @@
         "removeComments": true,
         "esModuleInterop": true,
         "skipLibCheck": true,
-        "forceConsistentCasingInFileNames": true
+        "forceConsistentCasingInFileNames": true,
+        "outDir": "dist"
     },
-    "exclude": [
-        "node_modules"
-    ]
+    "exclude": ["node_modules", "dist"]
 }
