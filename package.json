@@ -5,7 +5,7 @@
     "author": {
         "name": "GatorIO"
     },
-    "main": "dist/src/lib/index.js",
+    "main": "dist/index.js",
     "contributors": [
         {
             "name": "Phil Vizzaccaro",
@@ -33,7 +33,7 @@
     },
     "license": "MIT",
     "files": [
-        "dist/src"
+        "dist"
     ],
     "scripts": {
         "build": "tsc",
