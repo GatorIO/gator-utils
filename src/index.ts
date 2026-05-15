@@ -94,7 +94,7 @@ export function prefixAttributes(obj: Object, prefix: string): Object {
 
     for (let attrib in obj) {
 
-        if (obj.hasOwnProperty(attrib)) {
+        if (Object.hasOwn(obj, attrib)) {
 
             //  skip over arrays and $ operators
             if (!isArray(obj) && attrib.substr(0, 1) != '$') {
@@ -323,7 +323,7 @@ export function extend(o1: Object, o2: Object): Object {
         return o1;
 
     for (let key in o2)
-        if (o2.hasOwnProperty(key))
+        if (Object.hasOwn(o2, key))
             o1[key] = o2[key];
 
 }
@@ -369,7 +369,7 @@ export function copyProperty(
     /// I felt this was far more readable than the alternative method started with
     let copy = false;
 
-    if (o2.hasOwnProperty(property)) {
+    if (Object.hasOwn(o2, property)) {
         if (allowNull && o2[property] == null) {
             copy = true;
         }
@@ -509,7 +509,7 @@ export function merge(o1: any, o2: any, overwrite: boolean): Object {
 
     for (let key in o2) {
 
-        if (o2.hasOwnProperty(key)) {
+        if (Object.hasOwn(o2, key)) {
 
             if (o[key] == undefined) {
                 o[key] = o2[key];
@@ -659,7 +659,7 @@ export function renameAttribute(obj: Object, name: string, replacement: string):
 
     for (let attrib in obj) {
 
-        if (obj.hasOwnProperty(attrib) && attrib == name) {
+        if (Object.hasOwn(obj, attrib) && attrib == name) {
 
             //  skip over arrays and $ operators
             if (!isArray(obj) && attrib.substr(0, 1) != '$') {

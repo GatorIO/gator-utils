@@ -85,7 +85,7 @@ function isArray(obj) {
 }
 function prefixAttributes(obj, prefix) {
     for (let attrib in obj) {
-        if (obj.hasOwnProperty(attrib)) {
+        if (Object.hasOwn(obj, attrib)) {
             if (!isArray(obj) && attrib.substr(0, 1) != '$') {
                 obj[prefix + '.' + attrib] = obj[attrib];
                 delete obj[attrib];
@@ -201,7 +201,7 @@ function extend(o1, o2) {
     if (o1 == null || o2 == null)
         return o1;
     for (let key in o2)
-        if (o2.hasOwnProperty(key))
+        if (Object.hasOwn(o2, key))
             o1[key] = o2[key];
 }
 function copyProperty(property, o1, o2, allowNull = false, allowEmpty = false) {
@@ -210,7 +210,7 @@ function copyProperty(property, o1, o2, allowNull = false, allowEmpty = false) {
     if (property == null)
         throw new Error('you must specify a property value');
     let copy = false;
-    if (o2.hasOwnProperty(property)) {
+    if (Object.hasOwn(o2, property)) {
         if (allowNull && o2[property] == null) {
             copy = true;
         }
@@ -274,7 +274,7 @@ function merge(o1, o2, overwrite) {
         return o2;
     let o = clone(o1);
     for (let key in o2) {
-        if (o2.hasOwnProperty(key)) {
+        if (Object.hasOwn(o2, key)) {
             if (o[key] == undefined) {
                 o[key] = o2[key];
             }
@@ -361,7 +361,7 @@ function parseBoolean(value, nullOnFailure = false) {
 }
 function renameAttribute(obj, name, replacement) {
     for (let attrib in obj) {
-        if (obj.hasOwnProperty(attrib) && attrib == name) {
+        if (Object.hasOwn(obj, attrib) && attrib == name) {
             if (!isArray(obj) && attrib.substr(0, 1) != '$') {
                 obj[replacement] = obj[attrib];
                 delete obj[attrib];

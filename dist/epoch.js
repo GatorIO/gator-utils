@@ -118,7 +118,7 @@ function getTimezoneId(timezone) {
                 return 3;
         }
         for (let key in exports.timezones) {
-            if (exports.timezones.hasOwnProperty(key)) {
+            if (Object.hasOwn(exports.timezones, key)) {
                 let tz = exports.timezones[key];
                 if (tz.code.toUpperCase() == zone)
                     return +key;

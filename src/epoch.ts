@@ -123,7 +123,7 @@ export function getTimezoneId(timezone: any): number {
         //  try to find a matching zone
         for (let key in timezones) {
 
-            if (timezones.hasOwnProperty(key)) {
+            if (Object.hasOwn(timezones, key)) {
                 let tz = timezones[key];
 
                 if (tz.code.toUpperCase() == zone)
