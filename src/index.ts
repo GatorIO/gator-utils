@@ -549,7 +549,7 @@ export function missingParams(params: Object, requiredParams: Array<string>): Ar
 
     for (let a = 0; a < requiredParams.length; a++) {
 
-        if (!params || !params.hasOwnProperty(requiredParams[a])) {
+        if (!params?.[requiredParams[a]]) {
             missing.push(requiredParams[a]);
         }
     }
