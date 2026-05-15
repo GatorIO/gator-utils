@@ -297,8 +297,9 @@ function validEmail(email) {
 }
 function missingParams(params, requiredParams) {
     let missing = [];
+    let x;
     for (let a = 0; a < requiredParams.length; a++) {
-        if (!params || !params.hasOwnProperty(requiredParams[a])) {
+        if (!Object.hasOwn(params || {}, requiredParams[a])) {
             missing.push(requiredParams[a]);
         }
     }
